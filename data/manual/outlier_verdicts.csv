@@ -1,0 +1,11 @@
+station_id,parameter,ts_ist,value_raw,human_verdict
+BLR5607,pm25,2026-04-30 08:00:00,969.0,sensor_failure
+BLR5607,pm25,2026-04-30 07:00:00,932.0,sensor_failure
+BLR5607,pm25,2026-04-30 05:00:00,872.0,sensor_failure
+BLR5607,pm25,2026-04-30 09:00:00,810.0,sensor_failure
+BLR6975,pm25,2026-04-23 23:00:00,759.0,real_event
+BLR6974,pm25,2026-05-20 13:00:00,721.0,sensor_failure
+BLR6974,pm25,2026-05-20 14:00:00,721.0,sensor_failure
+BLR5607,pm25,2026-06-07 12:00:00,706.0,sensor_failure
+BLR5607,pm25,2026-04-30 06:00:00,705.0,sensor_failure
+BLR5607,pm25,2026-04-30 04:00:00,694.0,sensor_failure
