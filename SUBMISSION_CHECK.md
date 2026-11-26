@@ -24,7 +24,7 @@ Status on 2026-11-26. ✅ = evidence is in the repo; ⚠️ = something the team
 | 3 | Code: pandas, SQL, PySpark | `src/`, `sql/`, `notebooks/` | ✅ |
 | 4 | Data (cleaned, < 50 MB) + raw download steps | `data/clean/`, `data/manual/`, `outputs/` (3.9 MB); README section 3 | ✅ |
 | 5 | README with setup, full rerun and repo link | `README.md` | ✅ |
-| 6 | Team contribution split | `CONTRIBUTIONS.md` (equal, 20% each) | ✅ — each member checks their own row (M9) |
+| 6 | Team contribution split | `CONTRIBUTIONS.md` (equal, 20% each; every member's work listed) | ✅ — each member checks their own row (M9) |
 | — | GenAI disclosure appendix | Report Appendix F (`report/appendix_ai_use.md`) | ✅ — read it and edit in your own words |
 | — | Zipped folder named TeamName_FinalSubmission | `make zip` → `SataAndDoryLetting_FinalSubmission.zip` | ✅ build it again last, after all edits |
 
