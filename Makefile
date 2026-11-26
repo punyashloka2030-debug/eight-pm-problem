@@ -37,6 +37,7 @@ mysql:
 
 analysis:
 	$(PY) src/10_analysis.py
+	$(PY) src/12_inventory_vprofile.py
 
 charts:
 	$(PY) src/11_charts.py
