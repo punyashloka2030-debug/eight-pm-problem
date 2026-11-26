@@ -15,14 +15,20 @@ from datetime import date
 import pandas as pd
 
 from common import (BENGALURU_BBOX, DATE_END, DATE_START, INTERIM, TABLES,
-                    ensure_folders, get_json, openaq_headers)
+                    ensure_folders, get_json, log_decision, openaq_headers,
+                    reset_cleaning_log_for_stage)
+
+STAGE = "01_find_stations"
 
 API = "https://api.openaq.org/v3"
 
 # Coverage rule for proposing a station (we explain this in the report):
-# a station must have PM2.5 for at least 70% of the hours in our range.
-# Below that, too many evenings are missing to time the evening peak.
-MIN_COVERAGE_PCT = 70.0
+# a station must have PM2.5 for at least 60% of the hours in our range.
+# We first tried 70%: only 5 stations passed. 60% adds BTM Layout (68%) and
+# Peenya (62%), covering more of the city. That is safe because the gap rule in
+# 07_gaps_outliers.py drops incomplete EVENINGS anyway, so a 62% station only
+# contributes the evenings it fully recorded. (Team decision, M5, 2026-11-26.)
+MIN_COVERAGE_PCT = 60.0
 MAX_STATIONS = 10
 
 
@@ -136,6 +142,7 @@ def station_coverage(sensor_ids):
 
 def main():
     ensure_folders()
+    reset_cleaning_log_for_stage(STAGE)  # re-running must not duplicate log rows
 
     print(f"1) Locations inside the Bengaluru box {BENGALURU_BBOX}")
     locations = fetch_locations_in_bbox()
@@ -152,6 +159,10 @@ def main():
         & flat["pm25_sensor_ids"].notna()
     ].copy()
     print(f"   {len(candidates)} are fixed reference monitors with PM2.5")
+    log_decision(STAGE, "Locations in the Bengaluru box are a mix of reference monitors, "
+                 "low-cost sensors and locations without PM2.5",
+                 len(flat) - len(candidates), "Kept only fixed reference monitors with a PM2.5 sensor",
+                 "Low-cost and mobile sensors measure differently; mixing them compares unlike things")
 
     print(f"2) PM2.5 coverage for {DATE_START} to {DATE_END}")
     coverage_rows = []
@@ -170,9 +181,26 @@ def main():
     coverage = coverage.sort_values("pm25_coverage_pct", ascending=False)
     coverage.to_csv(TABLES / "station_coverage.csv", index=False)
 
+    # Station ID changes: count sensor ids that have 0% in our range although
+    # the station itself lists them (old ids replaced by new 1223xxxx ids).
+    dead_ids = sum(
+        part.endswith(":0.0%")
+        for text in coverage["coverage_per_sensor_id"]
+        for part in text.split()
+    )
+    log_decision(STAGE, "Stations list several PM2.5 sensor ids; old ids have no data in our range "
+                 "(OpenAQ re-issued sensor ids)", dead_ids,
+                 "Treat all ids of one location as one station; per day take the id that reported",
+                 "Otherwise one station would look like two, one of them empty")
+
     # Propose the best-covered stations, capped at MAX_STATIONS.
     proposed = coverage[coverage["pm25_coverage_pct"] >= MIN_COVERAGE_PCT].head(MAX_STATIONS)
     proposed.to_csv(INTERIM / "stations_proposed.csv", index=False)
+    log_decision(STAGE, f"Monitors below {MIN_COVERAGE_PCT:.0f}% PM2.5 coverage for the study range",
+                 len(coverage) - len(proposed),
+                 f"Dropped; kept {len(proposed)} stations with coverage >= {MIN_COVERAGE_PCT:.0f}%",
+                 "Too few complete evenings to time the evening peak; 70% left only 5 stations, "
+                 "so the team chose 60% (M5)")
 
     print(f"\n3) Proposed {len(proposed)} stations (coverage >= {MIN_COVERAGE_PCT}%)")
     cols = ["openaq_location_id", "name", "pm25_coverage_pct", "coverage_per_sensor_id", "parameters"]

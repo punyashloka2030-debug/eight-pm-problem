@@ -10,7 +10,7 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 - [ ] M2 Install MySQL 8 (Docker or native), create DB + user → `.env`
 - [ ] M3 Install Java 17, verify with a tiny Spark job
 - [ ] M4 Create the GitHub repo, add teammates, push
-- [ ] M5 Approve city, dates and station list
+- [x] M5 Approve city, dates and station list (2026-11-26: Bengaluru, 2025-10-01 to 2026-11-20, 7 stations at >=60% PM2.5 coverage → data/manual/stations_approved.csv)
 - [ ] M6 Verify the holiday and festival calendar draft *(details added in Phase 2)*
 - [ ] M7 Export Google Trends CSVs
 - [ ] M8 CPCB portal downloads *(only if OpenAQ coverage is thin; details added if needed)*
@@ -138,7 +138,7 @@ DO THIS:
   3. Reply with "approve" or the changes you want: city (default Bengaluru), dates
      (default 2025-10-01 to 2026-11-20), and which stations to add or drop.
 PUT RESULT HERE: data/interim/stations_proposed.csv (I'll copy the approved list to data/manual/stations_approved.csv)
-HOW I'LL CHECK:  6–10 approved stations, each with ≥70% PM2.5 coverage, written to stations_approved.csv.
+HOW I'LL CHECK:  6–10 approved stations, written to stations_approved.csv. (Rule changed to ≥60% at M5: only 5 passed 70%.)
 TIME:     ~10 minutes (team discussion)
 ═══════════════════════════════════════════
 ```
