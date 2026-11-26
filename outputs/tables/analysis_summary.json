@@ -92,6 +92,16 @@
       16.9
     ]
   },
+  "weekday_check": {
+    "worst_weekday_excl_festivals": "Monday",
+    "worst_value": 35.5,
+    "best_weekday_excl_festivals": "Thursday",
+    "best_value": 33.1,
+    "worst_minus_best": 2.4,
+    "permutation_p_value": 0.992,
+    "weekday_difference_is_clear": false,
+    "n_festival_dates_excluded": 19
+  },
   "events": {
     "diwali_19_23_mean": 76.7,
     "diwali_matched_19_23_mean": 32.5,
