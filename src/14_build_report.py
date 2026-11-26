@@ -245,12 +245,20 @@ def team_authors():
     return [f'"{row.name} ({row.usn})"' for row in team.itertuples()]
 
 
+def team_name():
+    """The team name from data/manual/team_name.txt (one line), or a TODO marker."""
+    path = MANUAL / "team_name.txt"
+    if not path.exists() or not path.read_text().strip():
+        return "[[TODO-HUMAN: team name in data/manual/team_name.txt]]"
+    return path.read_text().strip()
+
+
 def title_block(d):
     # pandoc reads a YAML list under author: one line per team member.
     authors = "\n".join(f"  - {a}" for a in team_authors())
     return f"""---
 title: "The 8 PM Problem: Bengaluru's evening pollution rush"
-subtitle: "Case Study B, Data and Storytelling, Module 1 · Team [[TODO-HUMAN: team name]]"
+subtitle: "Case Study B, Data and Storytelling, Module 1 · Team {team_name()}"
 author:
 {authors}
 date: "{pd.Timestamp.today():%d %B %Y}"

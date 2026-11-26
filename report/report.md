@@ -1,6 +1,6 @@
 ---
 title: "The 8 PM Problem: Bengaluru's evening pollution rush"
-subtitle: "Case Study B, Data and Storytelling, Module 1 · Team [[TODO-HUMAN: team name]]"
+subtitle: "Case Study B, Data and Storytelling, Module 1 · Team Sata and Dory Letting"
 author:
   - "Punyashloka Mahapatra (1RV23EC110)"
   - "Shubhaditya Bechan (1RV23AI099)"
