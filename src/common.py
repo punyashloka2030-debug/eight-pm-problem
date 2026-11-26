@@ -66,7 +66,7 @@ MIN_SECONDS_BETWEEN_CALLS = 1.1
 _last_call_time = 0.0
 
 
-def _cache_path(source, url, params):
+def cache_path(source, url, params):
     """Build a stable file name from the URL and its parameters."""
     key_text = url + json.dumps(params or {}, sort_keys=True)
     digest = hashlib.sha1(key_text.encode("utf-8")).hexdigest()[:16]
@@ -82,7 +82,7 @@ def get_json(source, url, params=None, headers=None, max_retries=5):
     data/raw/<source>/ folder and appears in the source access log.
     """
     global _last_call_time
-    path = _cache_path(source, url, params)
+    path = cache_path(source, url, params)
 
     # 1. Cache hit: no network call at all.
     if path.exists():
