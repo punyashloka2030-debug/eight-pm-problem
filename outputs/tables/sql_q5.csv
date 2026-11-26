@@ -1,0 +1,17 @@
+season,is_holiday,is_rain_hour,mean_evening_pm25,n_station_hours
+post_monsoon,0,0,39.4,3352
+post_monsoon,0,1,23.1,583
+post_monsoon,1,0,41.1,1625
+post_monsoon,1,1,26.8,276
+pre_monsoon,0,0,43.7,2121
+pre_monsoon,0,1,30.0,142
+pre_monsoon,1,0,43.8,1260
+pre_monsoon,1,1,28.4,79
+sw_monsoon,0,0,22.0,2225
+sw_monsoon,0,1,18.3,973
+sw_monsoon,1,0,20.6,1088
+sw_monsoon,1,1,16.7,322
+winter,0,0,42.1,1516
+winter,0,1,53.2,14
+winter,1,0,39.0,628
+winter,1,1,18.6,6
