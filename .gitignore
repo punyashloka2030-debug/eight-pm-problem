@@ -1,0 +1,30 @@
+# Secrets: never commit real keys or passwords
+.env
+
+# Python / Jupyter clutter
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Spark scratch folders
+spark-warehouse/
+metastore_db/
+derby.log
+
+# Raw API pulls are large and can be re-downloaded with `make collect`.
+# Keep the folder itself, ignore the contents.
+data/raw/**
+!data/raw/.gitkeep
+
+# Full cleaned parquet tables are rebuilt by `make clean`; we commit CSV samples only.
+data/clean/*.parquet
+data/clean/**/*.parquet
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Final zip is built, not committed
+*_FinalSubmission.zip
