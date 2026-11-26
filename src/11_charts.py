@@ -64,17 +64,22 @@ def ci_text(ci):
 
 
 # ---------------------------------------------------------------------------
-def chart_heatmap():
+def chart_heatmap(s):
     hw = pd.read_csv(TABLES / "spark_pm25_hour_weekday.csv")
     grid = hw.pivot(index="weekday", columns="hour", values="mean_pm25").reindex(WEEKDAYS)
 
     evening = grid.loc[:, 17:23]
-    worst_day = evening.mean(axis=1).idxmax()
     peak_hour = int(evening.mean(axis=0).idxmax())
-    worst_cell = evening.stack().idxmax()
-    title = (f"Evening PM2.5 climbs to its daily high around {peak_hour}:00; "
-             f"{worst_day} evenings are the worst "
-             f"(peak cell {worst_cell[0][:3]} {worst_cell[1]}:00 = {evening.max().max():.0f} µg/m³)")
+    # The weekday claim comes from the festival-free, bootstrapped check in 10_analysis.py.
+    w = s["weekday_check"]
+    if w["weekday_difference_is_clear"]:
+        weekday_text = (f"{w['worst_weekday_excl_festivals']} evenings are the worst "
+                        f"(+{w['worst_minus_best']} µg/m³ vs {w['best_weekday_excl_festivals']}, festivals excluded, "
+                        f"p = {w['permutation_p_value']})")
+    else:
+        weekday_text = (f"no weekday stands out once festivals are excluded (largest gap {w['worst_minus_best']} "
+                        f"µg/m³, p = {w['permutation_p_value']})")
+    title = f"Evening PM2.5 climbs to its daily high around {peak_hour}:00 every day of the week; {weekday_text}"
 
     fig, ax = plt.subplots(figsize=(11, 3.8))
     image = ax.imshow(grid.values, aspect="auto", cmap=BLUES)
@@ -97,11 +102,18 @@ def chart_rain_z(s):
     z = pd.read_csv(TABLES / "pm25_z_by_hour_rain.csv")
     r = s["rain_effect"]
     shift_ci, h_ci = r["peak_hour_shift_ci"], r["peak_height_change_ci"]
-    timing = ("with no clear shift in timing" if shift_ci[0] <= 0 <= shift_ci[1]
-              else f"and peaked {abs(r['peak_hour_shift_h']):.1f} h {'later' if r['peak_hour_shift_h'] > 0 else 'earlier'}")
-    height = ("no clear change in peak height" if h_ci[0] <= 0 <= h_ci[1]
-              else f"{abs(r['peak_height_change_pct']):.0f}% {'lower' if r['peak_height_change_pct'] < 0 else 'higher'} peak")
-    title = (f"Same month, same day type: rainy evenings had a {height} {timing} "
+    # Say only what the confidence intervals support.
+    if h_ci[0] <= 0 <= h_ci[1]:
+        height = "no clear change in peak height"
+    else:
+        height = (f"a {abs(r['peak_height_change_pct']):.0f}% "
+                  f"{'lower' if r['peak_height_change_pct'] < 0 else 'higher'} peak")
+    if shift_ci[0] <= 0 <= shift_ci[1]:
+        timing = "no clear shift in timing"
+    else:
+        timing = (f"a peak {abs(r['peak_hour_shift_h']):.1f} h "
+                  f"{'later' if r['peak_hour_shift_h'] > 0 else 'earlier'}")
+    title = (f"Same month, same day type: rainy evenings show {height} and {timing} "
              f"(n = {r['n_rainy_evenings']} rainy vs {r['n_dry_evenings']} dry station-evenings)")
 
     fig, ax = plt.subplots(figsize=(9, 4.5))
@@ -118,8 +130,9 @@ def chart_rain_z(s):
     ax.set_ylabel("PM2.5, z-score within each station")
     ax.grid(axis="y", color=GRID, lw=0.6)
     finish(fig, ax, title, "2_rain_vs_dry_zscore.png",
-           f"Peak height {ci_text(h_ci)}%; timing {ci_text(shift_ci)} h (bootstrap by date). z = 0 is the "
-           "station's own average. Air: OpenAQ; rain: Open-Meteo.")
+           f"Peak height {ci_text(h_ci)}%; timing {ci_text(shift_ci)} h (bootstrap by date). z = 0 = station's own "
+           "average. Rainy days are already cleaner at noon, before the rain window: not only wash-out. "
+           "Air: OpenAQ; rain: Open-Meteo.")
 
 
 def chart_peak_hours():
@@ -237,7 +250,7 @@ def chart_coverage():
 def main():
     ensure_folders()
     s = summary()
-    chart_heatmap()
+    chart_heatmap(s)
     chart_rain_z(s)
     chart_peak_hours()
     chart_months(s)

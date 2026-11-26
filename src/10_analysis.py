@@ -245,6 +245,48 @@ def worst_weekdays_months(pm, peaks):
     }
 
 
+def weekday_check(peaks):
+    """
+    Is one weekday really worse, or is the gap just chance? Two honesty checks:
+      1. Leave out festival dates (both Deepavalis fall on or next to a Monday,
+         so fireworks could make Mondays look worse than they are).
+      2. A PERMUTATION TEST. Gap = (highest weekday mean) - (lowest weekday mean).
+         With 7 averages, some gap ALWAYS appears by chance, so testing the gap
+         between the two we picked would be biased. Instead we shuffle which
+         weekday each DATE belongs to, 1,000 times, and see how often chance
+         alone gives a gap at least as big as the real one (the p-value).
+         We only name a "worst weekday" if p < 0.05.
+    Uses the mean PM2.5 of each usable station-evening (17:00-23:00).
+    """
+    df = peaks[peaks["is_festival"] != True].copy()  # noqa: E712
+    df["weekday"] = df["weekday"].astype(str)
+
+    def gap(frame):
+        m = frame.groupby("weekday")["evening_mean"].mean()
+        return m.max() - m.min(), m
+
+    observed, means = gap(df)
+    date_weekday = df.drop_duplicates("date").set_index("date")["weekday"]
+    bigger = 0
+    for _ in range(N_BOOT):
+        shuffled = pd.Series(RNG.permutation(date_weekday.values), index=date_weekday.index)
+        bigger += gap(df.assign(weekday=df["date"].map(shuffled)))[0] >= observed
+    p_value = (bigger + 1) / (N_BOOT + 1)
+
+    means = means.reindex(WEEKDAYS)
+    table = means.round(1).rename("mean_evening_pm25_excl_festivals").to_frame()
+    table["n_station_evenings"] = df.groupby("weekday").size().reindex(WEEKDAYS)
+    table.to_csv(TABLES / "evening_by_weekday_excl_festivals.csv")
+    return {
+        "worst_weekday_excl_festivals": means.idxmax(), "worst_value": round(float(means.max()), 1),
+        "best_weekday_excl_festivals": means.idxmin(), "best_value": round(float(means.min()), 1),
+        "worst_minus_best": round(float(observed), 1),
+        "permutation_p_value": round(float(p_value), 3),
+        "weekday_difference_is_clear": bool(p_value < 0.05),
+        "n_festival_dates_excluded": int(peaks.loc[peaks["is_festival"] == True, "date"].nunique()),  # noqa: E712
+    }
+
+
 def peak_timing(peaks):
     """When does the peak happen? Overall, and how often it is a real evening peak."""
     interior = peaks[~peaks["edge_peak"]]
@@ -352,6 +394,7 @@ def main():
     summary["peak_timing"] = peak_timing(peaks)
     summary["rain_effect"] = rain_effect(peaks)
     summary["worst"] = worst_weekdays_months(pm, peaks)
+    summary["weekday_check"] = weekday_check(peaks)
     z_curves(pm, peaks)
     summary["events"] = event_studies(pm, weather, calendar)
     summary["spreadsheet_export_rows"] = pivot_and_export(pm)
