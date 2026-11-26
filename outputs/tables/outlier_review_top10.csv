@@ -1,0 +1,11 @@
+qc_flag,station_id,station_name,parameter,ts_ist,value_raw,unit,human_verdict
+extreme_unexplained,BLR5607,"Peenya, Bengaluru - CPCB",pm25,2026-04-30 08:00:00,969.0,µg/m³,
+extreme_unexplained,BLR5607,"Peenya, Bengaluru - CPCB",pm25,2026-04-30 07:00:00,932.0,µg/m³,
+extreme_unexplained,BLR5607,"Peenya, Bengaluru - CPCB",pm25,2026-04-30 05:00:00,872.0,µg/m³,
+extreme_unexplained,BLR5607,"Peenya, Bengaluru - CPCB",pm25,2026-04-30 09:00:00,810.0,µg/m³,
+extreme_unexplained,BLR6975,"Silk Board, Bengaluru - KSPCB",pm25,2026-04-23 23:00:00,759.0,µg/m³,
+extreme_unexplained,BLR6974,"Bapuji Nagar, Bengaluru - KSPCB",pm25,2026-05-20 13:00:00,721.0,µg/m³,
+extreme_unexplained,BLR6974,"Bapuji Nagar, Bengaluru - KSPCB",pm25,2026-05-20 14:00:00,721.0,µg/m³,
+extreme_unexplained,BLR5607,"Peenya, Bengaluru - CPCB",pm25,2026-06-07 12:00:00,706.0,µg/m³,
+extreme_unexplained,BLR5607,"Peenya, Bengaluru - CPCB",pm25,2026-04-30 06:00:00,705.0,µg/m³,
+extreme_unexplained,BLR5607,"Peenya, Bengaluru - CPCB",pm25,2026-04-30 04:00:00,694.0,µg/m³,
