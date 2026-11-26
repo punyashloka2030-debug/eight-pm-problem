@@ -60,16 +60,18 @@ QA_PREP) governs how to work. Its key rules:
 
 Run order: `make all` (see Makefile) = 01..12 scripts. Phase 1-3 code is done. MANUAL_STEPS.md has status.
 
+Done manual steps: M1, M2, M3, M5, M10 (168/168 cells MATCH; screenshots in report/img/), M11.
 Pending MANUAL steps: M4 (add teammates), M6 (verify calendar -> calendar_verified.csv, then re-run
-07 onwards), M7 (Google Trends CSVs), M9 (one commit per teammate), M10 (LibreOffice pivot + screenshots),
-M12 (contribution split), M13 (rehearse), M14 (submit).
+07 onwards), M7 (Google Trends CSVs), M9 (one commit per teammate), M12 (contribution split),
+M13 (rehearse), M14 (submit).
 
 Pending AUTO work, in order:
-1. Confirm update_11 results (weekday_check, chart titles) and look at every chart in outputs/charts/.
-2. M10 support: a script that compares the user's spreadsheet pivot (exported CSV) with
-   outputs/tables/pivot_hour_weekday_pandas.csv automatically; write the side-by-side note.
-3. Google Trends loader + one chart once M7 files exist (weekly index; context only).
-4. Report `report/report.md` in the brief's exact order (a-i), <= 10 pages + appendices, written for a
+1. Look at every chart in outputs/charts/ (render check: label collisions, titles).
+   Weekday result: NO weekday stands out once festivals are excluded (gap 2.4 µg/m³, permutation p = 0.992).
+2. M10 is done (src/13_compare_spreadsheet.py, report/spreadsheet_vs_pandas.md).
+3. Google Trends loader exists (src/05b_load_trends.py + chart_trends in 11); it skips until M7 files exist.
+4. Report: plan was src/14_build_report.py that fills every number from outputs/tables/*.json/*.csv, draws a
+   pipeline diagram, and writes `report/report.md` in the brief's exact order (a-i), <= 10 pages + appendices, written for a
    non-technical commissioner, numbers only from pipeline files; render to .docx/.pdf (pandoc; PDF may
    need LibreOffice: `soffice --headless --convert-to pdf`). Use report/reflection_notes.md for section i.
 5. Slides `report/slides.md` (<= 10, finding titles, speaker notes) -> .pptx; speaker script with timings.

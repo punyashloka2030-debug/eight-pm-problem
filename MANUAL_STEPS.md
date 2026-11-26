@@ -15,7 +15,7 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 - [ ] M7 Export Google Trends CSVs
 - [ ] M8 CPCB portal downloads *(only if OpenAQ coverage is thin; details added if needed)*
 - [ ] M9 Each teammate makes one meaningful commit *(tasks assigned in Phase 2)*
-- [ ] M10 Build the hour-by-weekday pivot in LibreOffice Calc (check: src/13_compare_spreadsheet.py)
+- [x] M10 Build the hour-by-weekday pivot in LibreOffice Calc (2026-11-26: 168/168 cells MATCH, max diff 0.005)
 - [x] M11 Review the top 10 flagged outliers (2026-11-26: 10 verdicts → 21 hours failure, 5 hours real; data/manual/outlier_verdicts.csv)
 - [ ] M12 Fill in the team contribution split *(template added in Phase 4)*
 - [ ] M13 Read QA_PREP.md and rehearse the 7-minute talk *(script added in Phase 4)*
@@ -216,7 +216,7 @@ DO THIS:
        hour            → Row Fields
        weekday         → Column Fields
        pm25_city_mean  → Data Fields
-     Double-click "Sum - pm25_city_mean" in Data Fields → choose "Mean" → OK.
+     Double-click "Sum - pm25_city_mean" in Data Fields → choose "Average" → OK.
   4. Screenshot this layout window → save as report/img/m10_pivot_layout.png
   5. Click OK. The pivot appears on a new sheet. Screenshot it → report/img/m10_pivot_result.png
   6. With the pivot sheet open: File → Save As… → file name  spreadsheet_pivot.csv

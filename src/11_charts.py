@@ -247,6 +247,39 @@ def chart_coverage():
            "Station coordinates from OpenAQ. Grey italic names are reference places with no monitor in our data.")
 
 
+def chart_trends():
+    """Weekly search interest (Google Trends) for the three terms; drawn only after M7."""
+    path = TABLES / "trends_vs_data.csv"
+    if not path.exists():
+        print("  7_trends_weekly.png skipped (no Trends data yet: manual step M7)")
+        return
+    t = pd.read_csv(path, parse_dates=["week_start"])
+    corr = pd.read_csv(TABLES / "trends_correlation.csv")
+    rain_term = [c for c in t.columns if "rain" in c.lower() and c not in ("rain_mm_week",)]
+    rho = corr[(corr["term"].isin(rain_term)) & (corr["measure"] == "rain_mm_week")]["spearman_rho"]
+    term_name = rain_term[0] if rain_term else "rain"
+    if len(rho) and rho.iloc[0] >= 0.3:
+        finding = f"Searches for '{term_name}' rise in the weeks it actually rains"
+    elif len(rho) and rho.iloc[0] <= -0.3:
+        finding = f"Searches for '{term_name}' move AGAINST actual rain"
+    else:
+        finding = f"Searches for '{term_name}' barely track actual weekly rain"
+    rho_text = f"Spearman rho = {rho.iloc[0]:+.2f}" if len(rho) else "rho not available"
+    title = f"{finding} ({rho_text}, n = {len(t)} weeks)"
+
+    terms = [c for c in t.columns if c not in ("week_start", "rain_mm_week", "evening_pm25_week")]
+    palette = ["#257de0", "#f47230", "#00b894"]
+    styles = ["-", "--", ":"]
+    fig, ax = plt.subplots(figsize=(10, 4))
+    for term, colour, style in zip(terms, palette, styles):
+        ax.plot(t["week_start"], t[term], color=colour, lw=2, ls=style)
+        ax.text(t["week_start"].iloc[-1], t[term].iloc[-1], f"  {term}", fontsize=8, color=INK, va="center")
+    ax.set_ylabel("search interest (0-100, Karnataka)")
+    ax.grid(axis="y", color=GRID, lw=0.6)
+    finish(fig, ax, title, "7_trends_weekly.png",
+           "Google Trends, weekly, relative index (100 = busiest week). Context only: it cannot explain single evenings.")
+
+
 def main():
     ensure_folders()
     s = summary()
@@ -256,6 +289,7 @@ def main():
     chart_months(s)
     chart_diwali(s)
     chart_coverage()
+    chart_trends()
 
 
 if __name__ == "__main__":

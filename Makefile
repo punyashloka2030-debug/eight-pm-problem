@@ -24,6 +24,7 @@ collect: stations
 # Phase 2-3: flatten JSON, fix time and types, gaps and outliers
 clean:
 	$(PY) src/05_flatten_json.py
+	$(PY) src/05b_load_trends.py
 	$(PY) src/06_time_and_types.py
 	$(PY) src/07_gaps_outliers.py
 
