@@ -25,3 +25,7 @@ nbconvert>=7.16
 
 # Pretty tables in markdown
 tabulate>=0.9
+
+# Report: pandoc bundled as a pip package (no system install), and Word styles for the page layout
+pypandoc_binary>=1.13
+python-docx>=1.1

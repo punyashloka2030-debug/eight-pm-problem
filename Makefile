@@ -43,8 +43,7 @@ analysis:
 charts:
 	$(PY) src/11_charts.py
 
-# Phase 4: report and slides via pandoc
+# Phase 4: report (14 writes report.md from the pipeline's own tables, then .docx with the
+# bundled pandoc and .pdf with LibreOffice)
 report:
-	cd report && pandoc report.md -o report.docx
-	cd report && pandoc report.md -o report.pdf
-	cd report && pandoc slides.md -o slides.pptx
+	$(PY) src/14_build_report.py
