@@ -1,8 +1,7 @@
 # Team contribution split — Team Sata and Dory Letting
 
 The team agreed an **equal split**. Each member owns one part of the project, presents that part in the talk
-(`report/speaker_script.md`) and answers viva questions on it. Every piece of work is listed under exactly one
-member. Code was written with the help of generative AI, as disclosed in Appendix F of the report.
+(`report/speaker_script.md`). Every piece of work is listed under exactly one member. Code was written with the help of generative AI, as disclosed in Appendix F of the report.
 
 | Member | USN | Role | Slides | Contribution % |
 |---|---|---|---|---|
@@ -25,7 +24,6 @@ member. Code was written with the help of generative AI, as disclosed in Appendi
 - **Setup:** OpenAQ API key (M1), MySQL in Docker on port 3307 (M2), Java 17 and Spark (M3).
 - **Repository and reproducibility:** GitHub repository, `Makefile`, `README.md`, the report builder
   `src/14_build_report.py`, the submission zip `src/16_make_zip.py`.
-- **Viva questions to master** (`QA_PREP.md`): 1, 2, 25.
 
 ## Shubhaditya Bechan — data sources and big-data pipeline
 
@@ -37,7 +35,6 @@ member. Code was written with the help of generative AI, as disclosed in Appendi
 - **PySpark job:** `src/08_spark_job.py` and `notebooks/spark_job.ipynb` — resample, join with weather and
   calendar, group by hour and weekday, row counts after every stage (279,552 → 55,026 joined).
 - **Source register and V profile:** `src/12_inventory_vprofile.py`, `report/v_profile.md`, report section c.
-- **Viva questions to master:** 4, 5, 6, 17.
 
 ## Manan Joshi — cleaning and database
 
@@ -49,7 +46,6 @@ member. Code was written with the help of generative AI, as disclosed in Appendi
 - **Cleaning log:** `outputs/cleaning_log.csv`, report section e and Appendix A.
 - **Database:** `sql/schema.sql` (4 tables, primary and foreign keys), `src/09_load_mysql.py`, the ER diagram,
   the 7 queries in `sql/queries.sql` (Appendix B).
-- **Viva questions to master:** 7, 8, 10, 11, 12, 13, 14, 15.
 
 ## Tanikonda Sai Karan — analysis and charts
 
@@ -61,7 +57,6 @@ member. Code was written with the help of generative AI, as disclosed in Appendi
 - **Spreadsheet vs pandas (M10):** the LibreOffice pivot, `src/13_compare_spreadsheet.py`
   (168/168 cells match), Appendix D.
 - **Findings:** report section f.
-- **Viva questions to master:** 9, 16, 18, 19, 20, 21, 22, 23.
 
 ## Wangchen T — calendar, recommendation and presentation
 
@@ -70,12 +65,8 @@ member. Code was written with the help of generative AI, as disclosed in Appendi
   (`data/manual/calendar_verified.csv`).
 - **Recommendation and limitations:** report sections g and h.
 - **Reflection:** report section i (`report/reflection.md`, from `report/reflection_notes.md`).
-- **Presentation:** `src/15_build_slides.py`, `report/slides.pptx`, `report/speaker_script.md`, and the
-  viva preparation `QA_PREP.md` for the whole team.
-- **Viva questions to master:** 3, 24 — and the recommendation: why "alert by 18:00", why no later rainy-day
-  schedule, why one rule for every weekday.
+- **Presentation:** `src/15_build_slides.py`, `report/slides.pptx`, `report/speaker_script.md`.
 
 ---
 
-Every member reads all of `QA_PREP.md`: in the viva, anyone can be asked about any step (brief, Section 8).
 Repository commits per member — see manual step M9.
