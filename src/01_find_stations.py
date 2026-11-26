@@ -55,10 +55,13 @@ def flatten_location(loc):
     sensors = loc.get("sensors") or []
     parameter_names = sorted({s.get("parameter", {}).get("name", "") for s in sensors})
 
-    pm25_sensor_id = None
+    # A station can have MORE THAN ONE PM2.5 sensor id: OpenAQ re-issued ids
+    # (e.g. Hebbal has 20212 and 12235249). We keep all of them, joined by ";",
+    # and later treat them as one station (a "station ID change" in the log).
+    pm25_ids = []
     for s in sensors:
         if s.get("parameter", {}).get("name") == "pm25":
-            pm25_sensor_id = s.get("id")
+            pm25_ids.append(str(s.get("id")))
 
     coords = loc.get("coordinates") or {}
     first = (loc.get("datetimeFirst") or {}).get("utc")
@@ -75,20 +78,20 @@ def flatten_location(loc):
         "is_monitor": loc.get("isMonitor"),
         "is_mobile": loc.get("isMobile"),
         "parameters": ";".join(p for p in parameter_names if p),
-        "pm25_sensor_id": pm25_sensor_id,
+        "pm25_sensor_ids": ";".join(pm25_ids) if pm25_ids else None,
+        "n_pm25_sensors": len(pm25_ids),
         "first_utc": first,
         "last_utc": last,
     }
 
 
-def pm25_coverage_pct(sensor_id):
+def daily_pct_for_sensor(sensor_id):
     """
-    Percentage of our date range that this PM2.5 sensor actually covered.
+    Return {day: percentComplete} for one sensor inside our date range.
 
     We use the /sensors/{id}/days endpoint: one row per day, each with a
     `coverage.percentComplete` value (share of expected readings that arrived).
-    Days that are missing entirely count as 0%. Sum / number of days = coverage.
-    One request per station is cheap (about 416 days fits in one page).
+    About 416 days fits in one page of 1,000, so this is one request per sensor.
     """
     params = {
         "datetime_from": f"{DATE_START}T00:00:00Z",
@@ -96,22 +99,39 @@ def pm25_coverage_pct(sensor_id):
         "limit": 1000,
     }
     body = get_json("openaq", f"{API}/sensors/{sensor_id}/days", params, openaq_headers())
-    days = body.get("results", [])
 
-    n_days_in_range = (date.fromisoformat(DATE_END) - date.fromisoformat(DATE_START)).days + 1
-    total_pct = 0.0
-    days_inside_range = 0
-    for d in days:
-        # Guard: check each returned day really is inside our range. If the API
-        # ignored our date parameters we would otherwise get a wrong answer.
-        day_start = ((d.get("period") or {}).get("datetimeFrom") or {}).get("utc", "")[:10]
-        if not (DATE_START <= day_start <= DATE_END):
+    pct_by_day = {}
+    for d in body.get("results", []):
+        # Guard: keep only days really inside our range, in case the API
+        # ignored the date parameters.
+        day = ((d.get("period") or {}).get("datetimeFrom") or {}).get("utc", "")[:10]
+        if not (DATE_START <= day <= DATE_END):
             continue
-        days_inside_range += 1
         pct = (d.get("coverage") or {}).get("percentComplete")
-        total_pct += min(float(pct or 0), 100.0)
+        pct_by_day[day] = min(float(pct or 0), 100.0)
+    return pct_by_day
 
-    return round(total_pct / n_days_in_range, 1), days_inside_range, len(days)
+
+def station_coverage(sensor_ids):
+    """
+    Coverage % for a station that may have several PM2.5 sensor ids.
+
+    For each day we take the BEST sensor's percentComplete (if the old id is
+    empty that day but the new id reported, the station still had data).
+    Missing days count as 0. Sum / number of days in range = coverage %.
+    """
+    n_days_in_range = (date.fromisoformat(DATE_END) - date.fromisoformat(DATE_START)).days + 1
+    best_by_day = {}
+    per_sensor = []
+    for sid in sensor_ids:
+        pct_by_day = daily_pct_for_sensor(int(sid))
+        sensor_cov = round(sum(pct_by_day.values()) / n_days_in_range, 1)
+        per_sensor.append(f"{sid}:{sensor_cov}%")
+        for day, pct in pct_by_day.items():
+            best_by_day[day] = max(best_by_day.get(day, 0.0), pct)
+
+    combined = round(sum(best_by_day.values()) / n_days_in_range, 1)
+    return combined, len(best_by_day), " ".join(per_sensor)
 
 
 def main():
@@ -129,21 +149,22 @@ def main():
     candidates = flat[
         (flat["is_monitor"] == True)  # noqa: E712  (explicit True keeps None out)
         & (flat["is_mobile"] != True)  # noqa: E712
-        & flat["pm25_sensor_id"].notna()
+        & flat["pm25_sensor_ids"].notna()
     ].copy()
     print(f"   {len(candidates)} are fixed reference monitors with PM2.5")
 
     print(f"2) PM2.5 coverage for {DATE_START} to {DATE_END}")
     coverage_rows = []
     for _, row in candidates.iterrows():
-        pct, days_in, days_returned = pm25_coverage_pct(int(row["pm25_sensor_id"]))
+        sensor_ids = row["pm25_sensor_ids"].split(";")
+        pct, days_in, per_sensor = station_coverage(sensor_ids)
         coverage_rows.append({
             "openaq_location_id": row["openaq_location_id"],
             "pm25_coverage_pct": pct,
             "days_with_data": days_in,
-            "days_returned_by_api": days_returned,
+            "coverage_per_sensor_id": per_sensor,
         })
-        print(f"   {row['name'][:45]:45s} {pct:5.1f}%  ({days_in} days)")
+        print(f"   {row['name'][:40]:40s} {pct:5.1f}%  ({days_in} days)  [{per_sensor}]")
 
     coverage = candidates.merge(pd.DataFrame(coverage_rows), on="openaq_location_id")
     coverage = coverage.sort_values("pm25_coverage_pct", ascending=False)
@@ -154,7 +175,7 @@ def main():
     proposed.to_csv(INTERIM / "stations_proposed.csv", index=False)
 
     print(f"\n3) Proposed {len(proposed)} stations (coverage >= {MIN_COVERAGE_PCT}%)")
-    cols = ["openaq_location_id", "name", "provider", "pm25_coverage_pct", "parameters"]
+    cols = ["openaq_location_id", "name", "pm25_coverage_pct", "coverage_per_sensor_id", "parameters"]
     print(proposed[cols].to_string(index=False))
 
     if len(proposed) < 6:

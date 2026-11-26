@@ -6,7 +6,7 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 
 ## Status
 
-- [ ] M1 Get an OpenAQ API key → `.env`
+- [x] M1 Get an OpenAQ API key → `.env` (verified 2026-11-26: OpenAQ PASS, Open-Meteo PASS)
 - [ ] M2 Install MySQL 8 (Docker or native), create DB + user → `.env`
 - [ ] M3 Install Java 17, verify with a tiny Spark job
 - [ ] M4 Create the GitHub repo, add teammates, push
