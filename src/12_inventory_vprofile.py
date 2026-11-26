@@ -22,9 +22,12 @@ REPORT = ROOT / "report"
 
 
 def folder_mb(path):
-    """Size of every file under a folder, in MB."""
+    """Size in MB of one file, or of every file under a folder."""
     if not path.exists():
         return 0.0
+    # A single file (e.g. a .parquet or .csv): rglob would find nothing inside it, so size it directly.
+    if path.is_file():
+        return round(path.stat().st_size / 1e6, 2)
     return round(sum(f.stat().st_size for f in path.rglob("*") if f.is_file()) / 1e6, 1)
 
 

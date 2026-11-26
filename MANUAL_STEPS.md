@@ -7,8 +7,8 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 ## Status
 
 - [x] M1 Get an OpenAQ API key → `.env` (verified 2026-11-26: OpenAQ PASS, Open-Meteo PASS)
-- [ ] M2 Install MySQL 8 (Docker or native), create DB + user → `.env`
-- [ ] M3 Install Java 17, verify with a tiny Spark job
+- [x] M2 Install MySQL 8 (Docker or native), create DB + user → `.env` (Docker container eightpm-mysql, port 3307)
+- [x] M3 Install Java 17, verify with a tiny Spark job
 - [ ] M4 Create the GitHub repo, add teammates, push (repo created and pushed 2026-11-26; teammates still to be added)
 - [x] M5 Approve city, dates and station list (2026-11-26: Bengaluru, 2025-10-01 to 2026-11-20, 7 stations at >=60% PM2.5 coverage → data/manual/stations_approved.csv)
 - [ ] M6 Verify the holiday and festival calendar draft (14 rows flagged needs_check)

@@ -21,6 +21,7 @@ Run:  python src/11_charts.py
 
 import json
 import math
+import textwrap
 
 import matplotlib
 
@@ -51,9 +52,16 @@ def summary():
 def finish(fig, ax, title, filename, note=None):
     """Same title position, light grid and footnote on every chart."""
     ax.set_title(title, loc="left", fontsize=11, wrap=True)
+    # Wrap long footnotes so they never run off the right edge of the image.
+    # Width in characters grows with the figure width (about 14 characters per inch at 8 pt).
+    note_lines = 0
     if note:
-        fig.text(0.01, 0.01, note, fontsize=8, color=INK_2)
-    fig.tight_layout(rect=(0, 0.04 if note else 0, 1, 1))
+        width_chars = int(fig.get_figwidth() * 14)
+        wrapped = textwrap.fill(note, width=width_chars)
+        note_lines = wrapped.count("\n") + 1
+        fig.text(0.01, 0.01, wrapped, fontsize=8, color=INK_2)
+    # Leave room at the bottom: about 0.04 of the figure height per footnote line.
+    fig.tight_layout(rect=(0, 0.04 * note_lines, 1, 1))
     fig.savefig(CHARTS / filename, dpi=150)
     plt.close(fig)
     print(f"  {filename}: {title}")
@@ -230,9 +238,15 @@ def chart_coverage():
         ax.add_patch(circle)
         ax.text(lon0 - radius / 111 - 0.002, lat0, f"{radius} km", fontsize=7, color=INK_2, ha="right")
     ax.scatter(st["lon"], st["lat"], s=60, color=DRY, edgecolor="white", lw=2, zorder=3)
+    # Three southern stations sit close together, so their labels would overlap.
+    # Give those three a hand-picked position (left / below / right of the dot); the rest go top-right.
+    label_offsets = {"Jayanagar 5th Block": (-0.006, 0.0, "right"),
+                     "BTM Layout": (0.0, -0.012, "center"),
+                     "Silk Board": (0.006, 0.0, "left")}
     for _, row in st.iterrows():
         label = row["name"].split(",")[0]
-        ax.text(row["lon"] + 0.004, row["lat"] + 0.003, label, fontsize=8, color=INK)
+        dx, dy, align = label_offsets.get(label, (0.004, 0.003, "left"))
+        ax.text(row["lon"] + dx, row["lat"] + dy, label, fontsize=8, color=INK, ha=align, va="center")
     ax.scatter([lon0], [lat0], marker="+", color=INK, s=80)
     ax.text(lon0 + 0.004, lat0 - 0.008, "city centre", fontsize=8, color=INK_2)
     for name, (la, lo) in {"Whitefield": (12.97, 77.75), "Electronic City": (12.84, 77.66),
