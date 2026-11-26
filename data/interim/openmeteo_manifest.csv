@@ -1,0 +1,2 @@
+source,lat,lon,start_date,end_date,n_hours,raw_file
+openmeteo,12.9716,77.5946,2025-10-01,2026-11-20,9984,data/raw/openmeteo/8c9085f47bc9a027.json
