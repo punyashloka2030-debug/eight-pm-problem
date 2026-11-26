@@ -15,7 +15,7 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 - [ ] M7 Export Google Trends CSVs
 - [ ] M8 CPCB portal downloads *(only if OpenAQ coverage is thin; details added if needed)*
 - [ ] M9 Each teammate makes one meaningful commit *(tasks assigned in Phase 2)*
-- [ ] M10 Build the hour-by-weekday pivot in a spreadsheet *(details added in Phase 3)*
+- [ ] M10 Build the hour-by-weekday pivot in LibreOffice Calc (check: src/13_compare_spreadsheet.py)
 - [x] M11 Review the top 10 flagged outliers (2026-11-26: 10 verdicts → 21 hours failure, 5 hours real; data/manual/outlier_verdicts.csv)
 - [ ] M12 Fill in the team contribution split *(template added in Phase 4)*
 - [ ] M13 Read QA_PREP.md and rehearse the 7-minute talk *(script added in Phase 4)*
@@ -198,6 +198,37 @@ PUT RESULT HERE: data/manual/trends_*.csv  (4 files)
 HOW I'LL CHECK:  Each file parses, has ~60 weekly rows from Oct 2025 to Nov 2026, and the header names
                  the Karnataka region.
 TIME:     ~10 minutes
+═══════════════════════════════════════════
+```
+
+## M10 — Hour-by-weekday pivot in a spreadsheet
+
+```
+════════ MANUAL STEP M10: Spreadsheet pivot vs pandas ════════
+WHY:      Spreadsheets and dataframes: "build one hour-by-weekday pivot in a spreadsheet, rebuild it in
+          pandas, and compare" (side-by-side note).
+DO THIS:
+  0. Start a timer: the note asks how long it took.
+  1. libreoffice --calc data/manual/spreadsheet_export_city_hourly.csv
+     Text Import window: tick "Comma" only → OK.  (9,385 rows: date, weekday, hour, pm25_city_mean)
+  2. Click any cell inside the data → menu Insert → Pivot Table… → "Current selection" → OK.
+  3. In the Pivot Table Layout window, drag:
+       hour            → Row Fields
+       weekday         → Column Fields
+       pm25_city_mean  → Data Fields
+     Double-click "Sum - pm25_city_mean" in Data Fields → choose "Mean" → OK.
+  4. Screenshot this layout window → save as report/img/m10_pivot_layout.png
+  5. Click OK. The pivot appears on a new sheet. Screenshot it → report/img/m10_pivot_result.png
+  6. With the pivot sheet open: File → Save As… → file name  spreadsheet_pivot.csv
+     in the folder  data/manual/  → file type "Text CSV (.csv)" → Save →
+     "Use Text CSV Format!" → Field delimiter "," → OK. (Only the current sheet is saved: that's fine.)
+  7. Stop the timer. Then run:   python src/13_compare_spreadsheet.py
+  8. Open report/spreadsheet_vs_pandas.md and replace the two [[TODO-HUMAN]] markers with your minutes
+     and one or two sentences in your own words.
+PUT RESULT HERE: data/manual/spreadsheet_pivot.csv, report/img/m10_pivot_layout.png, report/img/m10_pivot_result.png
+HOW I'LL CHECK:  13_compare_spreadsheet.py prints "168 cells … MATCH". If it says DIFFERENT, the usual cause is
+                 Sum instead of Mean in step 3.
+TIME:     ~20–30 minutes
 ═══════════════════════════════════════════
 ```
 
