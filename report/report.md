@@ -4,7 +4,7 @@ subtitle: "Case Study B, Data and Storytelling, Module 1 · Team [[TODO-HUMAN: t
 author:
   - "Punyashloka Mahapatra (1RV23EC110)"
   - "Shubhaditya Bechan (1RV23AI099)"
-  - "Manan Joshi (1RV23IS129)"
+  - "Manan Joshi (1RV23CD029)"
   - "Tanikonda Sai Karan (1RV23IS129)"
   - "Wangchen T (1RV23CY060)"
 date: "26 November 2026"
