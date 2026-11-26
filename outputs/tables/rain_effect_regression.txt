@@ -5,7 +5,7 @@ Dep. Variable:               log_peak   R-squared:                       0.474
 Model:                            OLS   Adj. R-squared:                  0.466
 Method:                 Least Squares   F-statistic:                     59.35
 Date:                Thu, 26 Nov 2026   Prob (F-statistic):           3.69e-85
-Time:                        18:31:52   Log-Likelihood:                -841.72
+Time:                        18:35:38   Log-Likelihood:                -841.72
 No. Observations:                1436   AIC:                             1727.
 Df Residuals:                    1414   BIC:                             1843.
 Df Model:                          21                                         
@@ -52,7 +52,7 @@ Dep. Variable:              peak_hour   R-squared:                       0.091
 Model:                            OLS   Adj. R-squared:                  0.078
 Method:                 Least Squares   F-statistic:                     5.477
 Date:                Thu, 26 Nov 2026   Prob (F-statistic):           5.92e-12
-Time:                        18:31:52   Log-Likelihood:                -2819.7
+Time:                        18:35:38   Log-Likelihood:                -2819.7
 No. Observations:                1436   AIC:                             5683.
 Df Residuals:                    1414   BIC:                             5799.
 Df Model:                          21                                         
