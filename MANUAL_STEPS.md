@@ -16,7 +16,7 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 - [ ] M8 CPCB portal downloads *(only if OpenAQ coverage is thin; details added if needed)*
 - [ ] M9 Each teammate makes one meaningful commit *(tasks assigned in Phase 2)*
 - [ ] M10 Build the hour-by-weekday pivot in a spreadsheet *(details added in Phase 3)*
-- [ ] M11 Review the top 10 flagged outliers (helper: src/07b_review_outliers.py)
+- [x] M11 Review the top 10 flagged outliers (2026-11-26: 10 verdicts → 21 hours failure, 5 hours real; data/manual/outlier_verdicts.csv)
 - [ ] M12 Fill in the team contribution split *(template added in Phase 4)*
 - [ ] M13 Read QA_PREP.md and rehearse the 7-minute talk *(script added in Phase 4)*
 - [ ] M14 Rename the final zip with the team name and submit

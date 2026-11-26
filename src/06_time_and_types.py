@@ -24,7 +24,7 @@ Run:  python src/06_time_and_types.py
 
 import pandas as pd
 
-from common import (INTERIM, TABLES, ensure_folders, log_decision,
+from common import (save_parquet, INTERIM, TABLES, ensure_folders, log_decision,
                     reset_cleaning_log_for_stage)
 
 STAGE = "06_time_and_types"
@@ -213,11 +213,11 @@ def main():
     readings = drop_duplicates(readings)
     readings = readings[["station_id", "sensor_id", "ts_ist", "parameter", "value", "unit",
                          "expected_count", "observed_count", "openaq_has_flags"]]
-    readings.to_parquet(INTERIM / "readings_typed.parquet", index=False)
+    save_parquet(readings, INTERIM / "readings_typed.parquet")
     print(f"Readings out: {len(readings):,}")
 
     weather = fix_weather(pd.read_parquet(INTERIM / "weather_flat.parquet"))
-    weather.to_parquet(INTERIM / "weather_hourly_ist.parquet", index=False)
+    save_parquet(weather, INTERIM / "weather_hourly_ist.parquet")
     print(f"Weather hours: {len(weather):,}  (rain hours: {int(weather['is_rain_hour'].sum()):,})")
 
     ist_sanity_check(readings)

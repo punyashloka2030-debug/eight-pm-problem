@@ -188,6 +188,16 @@ def reset_cleaning_log_for_stage(stage):
             writer.writerow(row)
 
 
+def save_parquet(df, path):
+    """
+    Save a table as parquet that BOTH pandas and Spark can read.
+    pandas stores times in nanoseconds; Spark only reads micro-seconds and
+    fails with "Illegal Parquet type: INT64 (TIMESTAMP(NANOS,false))".
+    Our timestamps are whole hours, so rounding to microseconds loses nothing.
+    """
+    df.to_parquet(path, index=False, coerce_timestamps="us", allow_truncated_timestamps=True)
+
+
 def openaq_headers():
     """OpenAQ v3 wants the key in the X-API-Key header on every request."""
     key = os.getenv("OPENAQ_API_KEY", "")

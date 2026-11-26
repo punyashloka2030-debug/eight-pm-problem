@@ -29,7 +29,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from common import (CHARTS, CLEAN, DATE_END, DATE_START, INTERIM, MANUAL, TABLES,
+from common import (save_parquet, CHARTS, CLEAN, DATE_END, DATE_START, INTERIM, MANUAL, TABLES,
                     ensure_folders, log_decision, reset_cleaning_log_for_stage)
 
 STAGE = "07_gaps_outliers"
@@ -383,7 +383,7 @@ def evening_completeness(full):
                  f"(out of {len(days):,} station-evenings)", dropped,
                  "Excluded from peak-timing analysis (evening_usable = False); kept for averages",
                  "With 2+ evening hours missing we cannot tell WHEN the peak happened")
-    days.to_parquet(CLEAN / "station_day_completeness.parquet", index=False)
+    save_parquet(days, CLEAN / "station_day_completeness.parquet")
     return days
 
 
@@ -398,7 +398,7 @@ def clean_weather(weather):
                  "These change smoothly hour to hour, so a straight line is a fair estimate")
     log_decision(STAGE, "Missing rain hours", int(weather["rain_mm"].isna().sum()),
                  "Not filled", "Rain starts and stops suddenly; interpolating would invent showers")
-    weather.to_parquet(CLEAN / "weather_hourly.parquet", index=False)
+    save_parquet(weather, CLEAN / "weather_hourly.parquet")
     return weather
 
 
@@ -430,7 +430,7 @@ def main():
 
     keep = ["station_id", "ts_ist", "parameter", "value", "value_raw", "unit", "qc_flag",
             "is_filled", "observed_count"]
-    full[keep].to_parquet(CLEAN / "readings_clean.parquet", index=False)
+    save_parquet(full[keep], CLEAN / "readings_clean.parquet")
     full[keep].head(5000).to_csv(CLEAN / "readings_clean_sample.csv", index=False)
     print(f"\nreadings_clean: {len(full):,} rows -> data/clean/readings_clean.parquet")
 
