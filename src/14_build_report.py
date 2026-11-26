@@ -662,26 +662,18 @@ def section_h(d):
 
 
 def section_i(d):
-    """i. Reflection. Drafted from report/reflection_notes.md; the team must put it in their own words."""
-    s = d["s"]
-    q7_note = "20:00 most common, but 23:00 (the window's edge) second"
+    """
+    i. Reflection. The team writes it in report/reflection.md (their own words, from the dated
+    notes in report/reflection_notes.md); this function only puts it in the right place.
+    """
+    path = REPORT / "reflection.md"
+    if path.exists():
+        body = path.read_text().strip()
+    else:
+        body = "[[TODO-HUMAN: write section i in report/reflection.md]]"
     return f"""# i. Reflection
 
-**How the question changed.** We started by expecting rain to **delay** the evening peak, because wet roads
-slow traffic. The data reversed this: rainy evenings peaked earlier and lower. Our first SQL query on peak
-timing ({q7_note}) showed that many evenings have no clear "8 PM" peak, so we now report edge peaks
-separately. Our first weekday table named Monday the worst; that turned out to be the Deepavalis, and a
-proper test showed no weekday stands out. The data also changed our plan: only 5 stations reached 70%
-coverage, so we accepted 60% and a stricter per-evening rule instead.
-
-**What we would do with better data.**
-
-More monitors in the outer city; rain gauges at each station instead of one city-centre point; hourly
-traffic counts or metro ridership, so "traffic" becomes a measurement rather than an explanation; and several
-years of data, so a "worst month" can be checked against other years.
-
-[[TODO-HUMAN: rewrite this section in the team's own words (it is graded as your reflection); keep the
-facts from report/reflection_notes.md, and add one thing each member learned.]]
+{body}
 """
 
 
@@ -767,12 +759,16 @@ long. Correlations with weekly rain and evening PM2.5 are in `outputs/tables/tre
 
 
 def appendix_e(d):
-    """Appendix E: generative AI use (the full disclosure lives in its own file)."""
+    """Appendix: generative AI use, read from report/appendix_ai_use.md (the brief requires this disclosure)."""
     letter = "F" if d["trends_done"] else "E"
+    path = REPORT / "appendix_ai_use.md"
+    if path.exists():
+        body = path.read_text().strip()
+    else:
+        body = "[[TODO-HUMAN: fill report/appendix_ai_use.md (tools used, what we asked, what we changed)]]"
     return f"""# Appendix {letter}. Use of generative AI
 
-[[TODO-HUMAN: the team fills report/appendix_ai_use.md (tools used, what we asked, what we changed);
-it is pasted here when the submission is built.]]
+{body}
 """
 
 

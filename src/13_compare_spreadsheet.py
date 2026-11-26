@@ -67,6 +67,16 @@ def main():
           f"missing on one side: {missing}  |  largest difference: {max_diff:.4f}  ->  {verdict}")
 
     rows_in_export = sum(1 for _ in open(MANUAL / "spreadsheet_export_city_hourly.csv")) - 1
+
+    # The two human answers from M10 live in data/manual/m10_answers.csv, so re-running
+    # this script never wipes them. Until that file exists, the note shows TODO markers.
+    answers_path = MANUAL / "m10_answers.csv"
+    answers = {}
+    if answers_path.exists():
+        answers = pd.read_csv(answers_path).set_index("question")["answer"].to_dict()
+    minutes = answers.get("minutes_taken", "[[TODO-HUMAN: minutes it took you in M10]]")
+    own_words = answers.get("own_words", "[[TODO-HUMAN: one or two sentences in your own words on what "
+                                         "was easy or hard in the spreadsheet.]]")
     note = f"""# Spreadsheet vs pandas: the same hour-by-weekday pivot, built twice
 
 Both versions use the same input: `data/manual/spreadsheet_export_city_hourly.csv`
@@ -78,13 +88,13 @@ Both versions use the same input: `data/manual/spreadsheet_export_city_hourly.cs
 
 | | Spreadsheet (LibreOffice Calc) | pandas |
 |---|---|---|
-| Time taken | [[TODO-HUMAN: minutes it took you in M10]] | one `pivot_table` line; re-runs in seconds with `make analysis` |
+| Time taken | {minutes} | one `pivot_table` line; re-runs in seconds with `make analysis` |
 | Row limit | about 1 million rows per sheet; we had to export a {rows_in_export:,}-row city average, not the 279,552-row readings table | no fixed limit; memory is the limit (the full table loads in seconds) |
 | Reproducibility | clicks are not recorded; we kept screenshots (report/img/) and wrote the steps in MANUAL_STEPS.md | the code is the record; anyone can re-run it from raw data |
 | Error risk | easy to pick the wrong summary (Sum instead of Mean) or a wrong range; weekdays sort alphabetically | errors are in code, so they can be reviewed and tested; same result every run |
 | Best for | a quick look and sharing with non-coders | the pipeline, big tables, anything that must be repeated |
 
-[[TODO-HUMAN: one or two sentences in your own words on what was easy or hard in the spreadsheet.]]
+{own_words}
 """
     (ROOT / "report" / "spreadsheet_vs_pandas.md").write_text(note, encoding="utf-8")
     print("Note written to report/spreadsheet_vs_pandas.md")
