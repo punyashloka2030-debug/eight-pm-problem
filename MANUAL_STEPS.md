@@ -14,10 +14,10 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 - [x] M6 Verify the holiday and festival calendar draft (2026-11-26: checked against DPAR 16 HHL 2025 via KEA circular 089/2025; 2 dates corrected → data/manual/calendar_verified.csv)
 - [x] M7 Export Google Trends CSVs (2026-11-26: 4 files, 60 weekly rows each, Karnataka)
 - [x] M8 CPCB portal downloads — not needed (OpenAQ gave 7 stations at >= 60% coverage)
-- [ ] M9 Each teammate makes one meaningful commit (own row in CONTRIBUTIONS.md; needs M4 first)
+- [ ] M9 Each teammate makes one meaningful commit (reword own row in CONTRIBUTIONS.md; needs M4 first)
 - [x] M10 Build the hour-by-weekday pivot in LibreOffice Calc (2026-11-26: 168/168 cells MATCH, max diff 0.005)
 - [x] M11 Review the top 10 flagged outliers (2026-11-26: 10 verdicts → 21 hours failure, 5 hours real; data/manual/outlier_verdicts.csv)
-- [ ] M12 Fill in the team contribution split (CONTRIBUTIONS.md)
+- [x] M12 Fill in the team contribution split (2026-11-26: equal 20% each, roles by presentation section; CONTRIBUTIONS.md)
 - [ ] M13 Read QA_PREP.md and rehearse the 7-minute talk (report/speaker_script.md)
 - [ ] M14 Rebuild the zip (`make zip`, already named SataAndDoryLetting_FinalSubmission.zip) and submit
 
@@ -267,7 +267,8 @@ DO THIS (each teammate, on their OWN laptop and GitHub account; M4 must be done 
   1. git clone https://github.com/punyashloka2030-debug/eight-pm-problem.git
      cd eight-pm-problem
   2. git config user.name "Your Name"      git config user.email "the email on your GitHub account"
-  3. Open CONTRIBUTIONS.md and fill in YOUR OWN row: role and what you did (not the %).
+  3. Open CONTRIBUTIONS.md and check YOUR OWN row; reword "What they did" in your own words
+     so it matches what you really did (keep the 20%).
   4. git add CONTRIBUTIONS.md
      git commit -m "Contribution: <your name>"
      git pull --rebase
