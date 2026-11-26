@@ -1,0 +1,9 @@
+stage,description,rows,seconds
+1_load,Load readings_clean (full station x parameter x hour grid),279552,1.9
+2_clean,Drop missing hours and QC failures (real events kept),213940,0.3
+3_resample,Resample to hourly (date_trunc + avg) per station x parameter,213940,0.8
+4a_pm25,PM2.5 station-hours only,55026,0.3
+4b_join,PM2.5 ⋈ weather_hourly ⋈ calendar (left joins),55026,0.5
+5a_hour_weekday,GROUP BY weekday x hour (heatmap),168,0.3
+5b_month_hour,GROUP BY month x hour,336,0.2
+5c_rain_hour,GROUP BY rain/dry x hour,48,0.4

@@ -35,3 +35,5 @@ id,stage,problem_found,rows_affected,action_taken,why
 34,07_gaps_outliers,"Station-evenings with fewer than 6 of 7 real PM2.5 hours (out of 2,912 station-evenings)",872,Excluded from peak-timing analysis (evening_usable = False); kept for averages,With 2+ evening hours missing we cannot tell WHEN the peak happened
 35,07_gaps_outliers,"Missing hours in smooth weather variables (temperature, humidity, wind, boundary layer)",0,"Linear interpolation, at most 3 hours","These change smoothly hour to hour, so a straight line is a fair estimate"
 36,07_gaps_outliers,Missing rain hours,1,Not filled,Rain starts and stops suddenly; interpolating would invent showers
+37,08_spark_job,"Rows with no usable value (never sent, or blanked as a sensor failure)",65612,Filtered out in Spark before aggregating,An empty or failed reading must not pull averages towards zero
+38,08_spark_job,Joining PM2.5 hours to weather and calendar,0,"Left joins keep all 55,026 PM2.5 rows; rows_affected = rows that found no weather (0) or no calendar day (0)",A left join never silently drops air-quality hours; unmatched rows are counted
