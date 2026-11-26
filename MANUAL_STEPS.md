@@ -16,7 +16,7 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 - [ ] M8 CPCB portal downloads *(only if OpenAQ coverage is thin; details added if needed)*
 - [ ] M9 Each teammate makes one meaningful commit *(tasks assigned in Phase 2)*
 - [ ] M10 Build the hour-by-weekday pivot in a spreadsheet *(details added in Phase 3)*
-- [ ] M11 Review the top 10 flagged outliers *(details added in Phase 3)*
+- [ ] M11 Review the top 10 flagged outliers (helper: src/07b_review_outliers.py)
 - [ ] M12 Fill in the team contribution split *(template added in Phase 4)*
 - [ ] M13 Read QA_PREP.md and rehearse the 7-minute talk *(script added in Phase 4)*
 - [ ] M14 Rename the final zip with the team name and submit
@@ -198,6 +198,31 @@ PUT RESULT HERE: data/manual/trends_*.csv  (4 files)
 HOW I'LL CHECK:  Each file parses, has ~60 weekly rows from Oct 2025 to Nov 2026, and the header names
                  the Karnataka region.
 TIME:     ~10 minutes
+═══════════════════════════════════════════
+```
+
+## M11 — Review the top 10 flagged PM2.5 outliers
+
+```
+════════ MANUAL STEP M11: Real event or sensor failure? ════════
+WHY:      Cleaning and preprocessing (2.5 marks): outliers "detected separately from real extreme
+          events", with a human check, not just a rule.
+DO THIS:
+  1. Run:   python src/07b_review_outliers.py
+  2. For each of the 10 cases, look at three things:
+       a) This station, ±3 h: does the value BUILD UP and fade over hours (real), or jump from
+          normal to huge and straight back (failure)?
+       b) Other stations: are they high too (real, city-wide air), or normal (one sensor)?
+       c) Rain / festival: fireworks nights and storms explain real extremes.
+     A real event usually has a build-up AND either other stations high or a festival.
+  3. Save your 10 answers in order, e.g.:
+       python src/07b_review_outliers.py --save "real,failure,real,real,failure,real,real,real,failure,real"
+  4. Write one sentence per case explaining your decision in report/reflection_notes.md
+     (the Q&A may ask "how did you tell a sensor failure from Diwali night?").
+PUT RESULT HERE: outputs/tables/outlier_review_top10.csv (human_verdict column)
+HOW I'LL CHECK:  10 verdicts saved, each real_event or sensor_failure; I then make 07 apply them
+                 (failures blanked, real events kept) and log how many changed.
+TIME:     ~20 minutes
 ═══════════════════════════════════════════
 ```
 
