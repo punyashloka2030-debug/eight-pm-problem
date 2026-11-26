@@ -1,7 +1,12 @@
 ---
 title: "The 8 PM Problem: Bengaluru's evening pollution rush"
-subtitle: "Case Study B, Data and Storytelling, Module 1"
-author: "[[TODO-HUMAN: team name and member names]]"
+subtitle: "Case Study B, Data and Storytelling, Module 1 · Team [[TODO-HUMAN: team name]]"
+author:
+  - "Punyashloka Mahapatra (1RV23EC110)"
+  - "Shubhaditya Bechan (1RV23AI099)"
+  - "Manan Joshi (1RV23IS129)"
+  - "Tanikonda Sai Karan (1RV23IS129)"
+  - "Wangchen T (1RV23CY060)"
 date: "26 November 2026"
 ---
 

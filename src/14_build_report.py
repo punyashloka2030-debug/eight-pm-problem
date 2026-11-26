@@ -229,11 +229,30 @@ def draw_pipeline(d):
 # Report sections a-i (brief, Section 6), each one function
 # ---------------------------------------------------------------------------
 
+def team_authors():
+    """
+    The author lines for the title page, from data/manual/team.csv (name, usn).
+    Warns if two members share a USN, because that is almost always a typing slip.
+    """
+    path = MANUAL / "team.csv"
+    if not path.exists():
+        return ['"[[TODO-HUMAN: member names and USNs in data/manual/team.csv]]"']
+    team = pd.read_csv(path)
+    repeated = team[team["usn"].duplicated(keep=False)]
+    if len(repeated):
+        print(f"  !! USN used by more than one member: {', '.join(sorted(set(repeated['usn'])))} "
+              "(check data/manual/team.csv)")
+    return [f'"{row.name} ({row.usn})"' for row in team.itertuples()]
+
+
 def title_block(d):
+    # pandoc reads a YAML list under author: one line per team member.
+    authors = "\n".join(f"  - {a}" for a in team_authors())
     return f"""---
 title: "The 8 PM Problem: Bengaluru's evening pollution rush"
-subtitle: "Case Study B, Data and Storytelling, Module 1"
-author: "[[TODO-HUMAN: team name and member names]]"
+subtitle: "Case Study B, Data and Storytelling, Module 1 · Team [[TODO-HUMAN: team name]]"
+author:
+{authors}
 date: "{pd.Timestamp.today():%d %B %Y}"
 ---
 """
