@@ -2,7 +2,8 @@
 # Scripts for later phases are added as we build them; a missing script means
 # that phase has not been built yet.
 
-PY ?= python
+# Use the project venv when it exists, so `make` works even if it was not activated.
+PY ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python)
 
 .PHONY: all smoke stations collect flatten clean spark mysql analysis charts report zip
 
