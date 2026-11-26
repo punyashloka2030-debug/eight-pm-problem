@@ -219,7 +219,7 @@ DO THIS:
        python src/07b_review_outliers.py --save "real,failure,real,real,failure,real,real,real,failure,real"
   4. Write one sentence per case explaining your decision in report/reflection_notes.md
      (the Q&A may ask "how did you tell a sensor failure from Diwali night?").
-PUT RESULT HERE: outputs/tables/outlier_review_top10.csv (human_verdict column)
+PUT RESULT HERE: data/manual/outlier_verdicts.csv (written by --save; 07 never overwrites it)
 HOW I'LL CHECK:  10 verdicts saved, each real_event or sensor_failure; I then make 07 apply them
                  (failures blanked, real events kept) and log how many changed.
 TIME:     ~20 minutes

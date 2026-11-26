@@ -62,6 +62,11 @@ PPB_FACTOR = {"no2": 46.0055 / 24.45, "co": 28.010 / 24.45 / 1000}
 EXTREME_PERCENTILE = 0.995
 HEAVY_RAIN_MM = 10.0         # >= 10 mm in one hour: cloudburst-type rain
 
+# Human verdicts from manual step M11. Kept in data/manual/ because this script
+# rewrites outputs/tables/ on every run and would otherwise erase them.
+VERDICTS_FILE = MANUAL / "outlier_verdicts.csv"
+REVIEW_FILE = TABLES / "outlier_review_top10.csv"
+
 
 def load_calendar():
     """Use the human-verified calendar if it exists; otherwise the draft (and say so)."""
@@ -244,7 +249,69 @@ def flag_spikes_and_events(full, calendar, weather):
         log_decision(STAGE, f"Extreme values (above each station's 99.5th percentile): {flag}",
                      int((full["qc_flag"] == flag).sum()), f"Kept; qc_flag = '{flag}'", why)
 
-    return full.drop(columns=["p995"])
+    return full  # keeps the p995 column; apply_human_verdicts needs it
+
+
+def load_verdicts():
+    """
+    Read the M11 verdicts. The first time, they may still be only in the review
+    table (written by 07b_review_outliers.py --save), so copy them across once.
+    """
+    if not VERDICTS_FILE.exists() and REVIEW_FILE.exists():
+        review = pd.read_csv(REVIEW_FILE)
+        done = review[review["human_verdict"].fillna("").str.len() > 0]
+        if len(done):
+            done[["station_id", "parameter", "ts_ist", "value_raw", "human_verdict"]].to_csv(
+                VERDICTS_FILE, index=False)
+            print(f"Copied {len(done)} M11 verdicts to {VERDICTS_FILE.name}")
+    if VERDICTS_FILE.exists():
+        return pd.read_csv(VERDICTS_FILE, parse_dates=["ts_ist"])
+    return pd.DataFrame(columns=["station_id", "parameter", "ts_ist", "human_verdict"])
+
+
+def apply_human_verdicts(full, verdicts):
+    """
+    Apply each M11 verdict to the whole EPISODE around the reviewed hour:
+    the unbroken run of hours at that station where the value stays above the
+    station's 95th percentile. One bad morning is one decision, not ten.
+    (Why 95th and not 99.5th? A long bad episode pushes the 99.5th percentile up
+    into the episode itself, so the run would be cut short.)
+    """
+    if verdicts.empty:
+        print("No M11 verdicts yet")
+        return full
+
+    changed = {"sensor_failure": 0, "real_event": 0}
+    for _, v in verdicts.iterrows():
+        mask = (full["station_id"] == v["station_id"]) & (full["parameter"] == v["parameter"])
+        series = full[mask]  # already sorted by time
+        hits = series.index[series["ts_ist"] == v["ts_ist"]]
+        if len(hits) == 0:
+            continue
+        positions = list(series.index)
+        start = end = positions.index(hits[0])
+        p95 = series["value_raw"].quantile(0.95)
+        high = series["value_raw"] > p95
+        while start > 0 and high.iloc[start - 1]:
+            start -= 1
+        while end < len(positions) - 1 and high.iloc[end + 1]:
+            end += 1
+        episode = positions[start:end + 1]
+
+        new_flag = "failure_reviewed" if v["human_verdict"] == "sensor_failure" else "real_event_reviewed"
+        newly = full.loc[episode, "qc_flag"] != new_flag
+        changed[v["human_verdict"]] += int(newly.sum())
+        full.loc[episode, "qc_flag"] = new_flag
+
+    log_decision(STAGE, f"Manual review (M11) of {len(verdicts)} flagged PM2.5 hours: verdict applied "
+                 "to the whole high-value episode around each", changed["sensor_failure"],
+                 "Episodes judged sensor failures: qc_flag = 'failure_reviewed', value blanked",
+                 "A human looked at build-up, other stations, rain and festivals "
+                 "(see report/reflection_notes.md)")
+    log_decision(STAGE, "Manual review (M11): episodes judged real events", changed["real_event"],
+                 "qc_flag = 'real_event_reviewed'; kept",
+                 "Real extreme air must stay in the data, or we would understate the worst evenings")
+    return full
 
 
 def save_examples(full, stations):
@@ -260,12 +327,14 @@ def save_examples(full, stations):
 
     # M11: the 10 most extreme PM2.5 cases a human should look at,
     # unexplained ones first, then the biggest spikes.
-    review = flagged[flagged["parameter"] == "pm25"].copy()
+    # Cases already decided in M11 are left out, so this list shows what is still unreviewed.
+    review = flagged[(flagged["parameter"] == "pm25") &
+                     ~flagged["qc_flag"].str.endswith("_reviewed")].copy()
     review["priority"] = review["qc_flag"].map(
         {"extreme_unexplained": 0, "spike": 1, "real_event_citywide": 2}).fillna(3)
     review = review.sort_values(["priority", "value_raw"], ascending=[True, False]).head(10)
     review["human_verdict"] = ""  # M11: write "sensor_failure" or "real_event"
-    review[cols + ["human_verdict"]].to_csv(TABLES / "outlier_review_top10.csv", index=False)
+    review[cols + ["human_verdict"]].to_csv(REVIEW_FILE, index=False)
 
 
 # ---------------------------------------------------------------------------
@@ -280,7 +349,7 @@ def fill_gaps(full):
     value is marked is_filled = True, and peak timing ignores evenings that
     are not mostly real data anyway.
     """
-    failures = ["sentinel", "out_of_range", "negative", "zero", "flatline", "spike"]
+    failures = ["sentinel", "out_of_range", "negative", "zero", "flatline", "spike", "failure_reviewed"]
     full.loc[full["qc_flag"].isin(failures), "value"] = np.nan
 
     before = full["value"].isna()
@@ -350,6 +419,8 @@ def main():
 
     full = flag_failures(full)
     full = flag_spikes_and_events(full, calendar, weather)
+    full = apply_human_verdicts(full, load_verdicts())
+    full = full.drop(columns=["p995"])
     save_examples(full, stations)
     print("\nqc_flag counts:\n" + full["qc_flag"].value_counts().to_string())
 

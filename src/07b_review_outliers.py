@@ -21,6 +21,7 @@ import pandas as pd
 from common import CLEAN, MANUAL, TABLES
 
 REVIEW_FILE = TABLES / "outlier_review_top10.csv"
+VERDICTS_FILE = MANUAL / "outlier_verdicts.csv"  # permanent home of the verdicts
 
 
 def show_case(number, case, readings, weather, festival_dates):
@@ -60,7 +61,14 @@ def main():
             sys.exit(f"Need exactly {len(review)} words, each 'real' or 'failure'.")
         review["human_verdict"] = ["real_event" if v == "real" else "sensor_failure" for v in verdicts]
         review.to_csv(REVIEW_FILE, index=False)
-        print(f"Saved verdicts to {REVIEW_FILE}")
+
+        # Add to the permanent verdicts file (07 reads it; re-running 07 never erases it).
+        new = review[["station_id", "parameter", "ts_ist", "value_raw", "human_verdict"]]
+        if VERDICTS_FILE.exists():
+            old = pd.read_csv(VERDICTS_FILE, parse_dates=["ts_ist"])
+            new = pd.concat([old, new]).drop_duplicates(["station_id", "parameter", "ts_ist"], keep="last")
+        new.to_csv(VERDICTS_FILE, index=False)
+        print(f"Saved verdicts to {VERDICTS_FILE} ({len(new)} in total)")
         print(review[["station_name", "ts_ist", "value_raw", "qc_flag", "human_verdict"]].to_string())
         return
 
