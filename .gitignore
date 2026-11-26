@@ -28,3 +28,6 @@ Thumbs.db
 
 # Final zip is built, not committed
 *_FinalSubmission.zip
+
+# Spark output folder (rebuilt by `make spark`)
+data/clean/spark_pm25_station_hour/
