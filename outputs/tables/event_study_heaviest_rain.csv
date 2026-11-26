@@ -1,0 +1,49 @@
+date,hour,value,kind
+2025-10-09,0,23.48,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,1,25.6,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,2,24.326,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,3,18.36,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,4,19.419999999999998,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,5,21.14,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,6,22.9,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,7,23.54,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,8,24.1,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,9,25.18,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,10,26.46,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,11,22.0,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,12,16.94,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,13,16.72,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,14,16.64,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,15,15.64,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,16,15.66,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,17,17.48,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,18,23.1,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,19,25.9,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,20,23.580000000000002,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,21,17.68,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,22,11.84,"Wettest day (2025-10-09, 34 mm)"
+2025-10-09,23,10.16,"Wettest day (2025-10-09, 34 mm)"
+,0,20.896214285714287,matched normal days
+,1,20.320464285714287,matched normal days
+,2,19.993964285714284,matched normal days
+,3,19.19970238095238,matched normal days
+,4,19.168035714285715,matched normal days
+,5,19.761499999999998,matched normal days
+,6,26.196714285714286,matched normal days
+,7,27.737535714285713,matched normal days
+,8,23.630410714285713,matched normal days
+,9,22.911017857142856,matched normal days
+,10,22.673265476190476,matched normal days
+,11,23.479869047619047,matched normal days
+,12,21.06892261904762,matched normal days
+,13,20.58574404761905,matched normal days
+,14,20.894613095238096,matched normal days
+,15,22.067476190476192,matched normal days
+,16,22.556130952380954,matched normal days
+,17,22.738660714285714,matched normal days
+,18,25.783035714285713,matched normal days
+,19,27.09125,matched normal days
+,20,27.674702380952382,matched normal days
+,21,26.518392857142857,matched normal days
+,22,25.470565476190476,matched normal days
+,23,25.078238095238092,matched normal days

@@ -1,0 +1,34 @@
+field,table,example,measurement_level,structure,source
+station_id,stations,BLR6973,nominal,structured,our key from OpenAQ location id
+name,stations,"Jayanagar 5th Block, Bengaluru - KSPCB",nominal,structured,OpenAQ v3 API (JSON)
+lat,stations,12.92,continuous,structured,OpenAQ v3 API (JSON)
+lon,stations,77.58,continuous,structured,OpenAQ v3 API (JSON)
+operator,stations,Karnataka State Pollution Control Board,nominal,structured,OpenAQ v3 API (JSON)
+openaq_location_id,stations,6973,nominal (a number used as a label),structured,OpenAQ v3 API (JSON)
+ts_ist,readings,2025-10-12 20:00:00,continuous (interval scale: time),semi-structured (nested JSON text),OpenAQ v3 API (JSON)
+parameter,readings,co,nominal,semi-structured,OpenAQ v3 API (JSON)
+value,readings,0.00,continuous (ratio),semi-structured,OpenAQ v3 API (JSON)
+unit,readings,mg/m³,nominal,semi-structured,OpenAQ v3 API (JSON)
+qc_flag,readings,ok,nominal,structured,derived (07_gaps_outliers.py)
+is_filled,readings,False,nominal (binary),structured,derived (07_gaps_outliers.py)
+observed_count,readings,3,discrete (0-4 quarter-hours),semi-structured,OpenAQ v3 API (JSON)
+ts_ist,weather_hourly,2025-10-01 05:00:00,continuous (interval scale: time),semi-structured (JSON arrays),Open-Meteo archive API (JSON)
+precip_mm,weather_hourly,0.00,continuous (ratio),semi-structured,Open-Meteo archive API (JSON)
+rain_mm,weather_hourly,0.00,continuous (ratio),semi-structured,Open-Meteo archive API (JSON)
+temp_c,weather_hourly,19.60,continuous (interval),semi-structured,Open-Meteo archive API (JSON)
+rh_pct,weather_hourly,94.00,"continuous (ratio, 0-100)",semi-structured,Open-Meteo archive API (JSON)
+wind_kmh,weather_hourly,9.70,continuous (ratio),semi-structured,Open-Meteo archive API (JSON)
+blh_m,weather_hourly,500.00,continuous (ratio),semi-structured,Open-Meteo archive API (JSON)
+is_rain_hour,weather_hourly,False,nominal (binary),structured,derived: precip_mm >= 0.1
+date,calendar,2025-10-01,continuous (interval scale: time),structured,Karnataka/central holiday lists (CSV we built)
+weekday,calendar,Wednesday,"ordinal (ordered, repeats weekly)",structured,Karnataka/central holiday lists (CSV we built)
+is_holiday,calendar,True,nominal (binary),structured,Karnataka/central holiday lists (CSV we built)
+holiday_name,calendar,Mahanavami / Ayudha Pooja,nominal,unstructured (free text names),Karnataka/central holiday lists (CSV we built)
+is_long_weekend,calendar,False,nominal (binary),structured,derived: 3+ days off in a row
+is_festival,calendar,True,nominal (binary),structured,Karnataka/central holiday lists (CSV we built)
+season,calendar,post_monsoon,"nominal (cyclic, no natural first)",structured,derived: IMD seasons by month
+aqi_category,analysis,Moderate,ORDINAL (Good < Satisfactory < Moderate < Poor < Very Poor < Severe),structured,"derived: CPCB PM2.5 breakpoints, applied hourly"
+pm25_z,analysis,1.84,continuous (unitless),structured,derived: z-score within station
+peak_hour,analysis,20,discrete (17-23),structured,derived: hour of the evening maximum
+evening_type,analysis,rainy,nominal (rainy / dry / other),structured,derived from weather
+search_interest,trends,0-100 index,discrete (relative index 0-100),structured export of unstructured search text,"Google Trends (manual CSV, M7)"

@@ -1,0 +1,106 @@
+{
+  "generated_by": "src/10_analysis.py",
+  "aqi_evening": {
+    "Good": 53.4,
+    "Satisfactory": 34.8,
+    "Moderate": 9.4,
+    "Poor": 1.5,
+    "Very Poor": 0.9,
+    "Severe": 0.1
+  },
+  "peak_timing": {
+    "n_usable_evenings": 2040,
+    "peak_hour_counts": {
+      "17": 216,
+      "18": 196,
+      "19": 275,
+      "20": 442,
+      "21": 369,
+      "22": 246,
+      "23": 296
+    },
+    "pct_edge_peaks_all": 25.1,
+    "interior_peak_median_hour": 20.0,
+    "interior_peak_iqr": [
+      19.0,
+      21.0
+    ],
+    "pct_peaks_19_to_22": 65.3
+  },
+  "rain_effect": {
+    "n_rainy_evenings": 409,
+    "n_dry_evenings": 1027,
+    "n_rainy_dates": 79,
+    "n_strata_compared": 15,
+    "peak_hour_shift_h": -0.81,
+    "peak_hour_shift_ci": [
+      -1.33,
+      -0.36
+    ],
+    "peak_height_change_pct": -29.3,
+    "peak_height_change_ci": [
+      -43.4,
+      -13.1
+    ],
+    "evening_mean_change_pct": -36.0,
+    "evening_mean_change_ci": [
+      -48.0,
+      -23.1
+    ],
+    "regression_peak_height_pct": -34.7,
+    "regression_peak_height_ci": [
+      -43.6,
+      -24.4
+    ],
+    "regression_peak_hour_shift_h": -0.92,
+    "regression_peak_hour_ci": [
+      -1.31,
+      -0.54
+    ],
+    "pct_edge_peaks": {
+      "dry": 22.6,
+      "rainy": 30.3
+    },
+    "pct_peaks_at_or_after_21h": {
+      "dry": 50.9,
+      "rainy": 35.0
+    }
+  },
+  "worst": {
+    "worst_weekday": "Monday",
+    "worst_weekday_pm25": 36.6,
+    "best_weekday": "Thursday",
+    "best_weekday_pm25": 32.0,
+    "worst_months": [
+      "2026-11",
+      "2026-03",
+      "2026-04"
+    ],
+    "worst_months_pm25": [
+      53.3,
+      50.6,
+      46.5
+    ],
+    "best_months": [
+      "2026-06",
+      "2026-07",
+      "2026-08"
+    ],
+    "best_months_pm25": [
+      19.3,
+      18.0,
+      16.9
+    ]
+  },
+  "events": {
+    "diwali_19_23_mean": 76.7,
+    "diwali_matched_19_23_mean": 32.5,
+    "diwali_n_matched_days": 6,
+    "wettest_day": "2025-10-09",
+    "wettest_day_mm": 34.4,
+    "wettest_17_23_mean": 18.5,
+    "wettest_matched_17_23_mean": 25.8,
+    "wettest_n_matched_days": 8
+  },
+  "spreadsheet_export_rows": 9385
+}
