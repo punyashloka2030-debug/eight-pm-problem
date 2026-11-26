@@ -49,10 +49,8 @@ source (search interest).
 |---|---|---|---|---|
 | OpenAQ v3 API | https://api.openaq.org/v3 | API (JSON), scripts 01/02, key in .env, month windows, cached | https://docs.openaq.org/about/terms | 2026-11-26 |
 | Open-Meteo Historical Weather API | https://archive-api.open-meteo.com/v1/archive | API (JSON), script 03, timezone=GMT, cached | https://open-meteo.com/en/terms | 2026-11-26 |
-| Karnataka general holidays 2025 (DPAR 16 HHL 2024) and 2026 (DPAR 16 HHL 2025) + central list 2026 | https://cag.gov.in/uploads/media/Karnataka-State-Holidays-2025-067764409e26023-56493682.pdf ; https://kea.co.in/wp-content/uploads/2025/11/Circular-No-089-2025-KARNATAKA-GOVERNMENT-HOLIDAYS-FOR-THE-YEAR-2026.pdf ; https://cag.gov.in/uploads/media/Holiday-List-2026-069521fe6f358d0-89936988.pdf | Typed in by hand (04_build_calendar.py), checked date by date in M6 -> calendar_verified.csv | Government publication | manual |
-| Google Trends (Karnataka): bangalore traffic / bangalore rain / AQI bangalore | https://trends.google.com/trends/explore | Manual CSV export (M7); no scraping | https://policies.google.com/terms | manual |
-
-[[TODO-HUMAN: Google Trends CSVs not exported yet (manual step M7); the Trends row has no access date until then.]]
+| Karnataka general holidays 2025 (DPAR 16 HHL 2024) and 2026 (DPAR 16 HHL 2025) + central list 2026 | https://cag.gov.in/uploads/media/Karnataka-State-Holidays-2025-067764409e26023-56493682.pdf ; https://kea.co.in/wp-content/uploads/2025/11/Circular-No-089-2025-KARNATAKA-GOVERNMENT-HOLIDAYS-FOR-THE-YEAR-2026.pdf ; https://cag.gov.in/uploads/media/Holiday-List-2026-069521fe6f358d0-89936988.pdf | Typed in by hand (04_build_calendar.py), checked date by date in M6 -> calendar_verified.csv | Government publication | 2026-11-26 |
+| Google Trends (Karnataka): bangalore traffic / bangalore rain / AQI bangalore | https://trends.google.com/trends/explore | Manual CSV export (M7); no scraping | https://policies.google.com/terms | 2026-11-26 |
 
 **Data inventory.** Every field we use (33 in all), grouped by table and level of
 measurement; the full inventory with an example value per field is in Appendix A. The AQI category (Good to
@@ -135,7 +133,7 @@ the charts and this report. In plain words:
 
 # e. Cleaning log
 
-The full log has 38 rows, one per decision, each with its reason (Appendix A). The key decisions are
+The full log has 40 rows, one per decision, each with its reason (Appendix A). The key decisions are
 below; each rule is justified underneath.
 
 | Topic | Problem found | Rows | Action taken | Log # |
@@ -241,6 +239,14 @@ on the wettest day (2025-10-09, 34.4 mm) the evening averaged
 
 ![Chart 5: Deepavali night vs matched normal days.](../outputs/charts/5_event_diwali.png){width=12cm}
 
+**Finding 5 (context): residents search for the weather and the air when it changes, not for traffic.**
+Weekly Google Trends interest in Karnataka (59 weeks; chart 7 in Appendix E) rises with the week's rain
+for "bangalore rain" (Spearman rho = +0.62) and with the week's
+evening PM2.5 for "AQI bangalore" (rho = +0.52), while
+"bangalore traffic" follows neither (+0.03 and
+-0.09). Searches are weekly and relative, so this is a sign
+that people notice bad-air weeks, not evidence about any single evening.
+
 
 # g. Recommendation
 
@@ -286,7 +292,7 @@ festival evenings named above.
   24-hour AQI bands are an indication only.
 * **Unit conversion.** NO2 and CO were converted from ppb at a standard 25 °C and 1 atm; Bengaluru's
   real temperature and altitude shift these by a few percent. PM2.5, our main measure, needed no conversion.
-* **Search data.** [[TODO-HUMAN: after M7, one sentence on who Google Trends represents (people who search online, in English) and that it is weekly and relative, so it only gives context.]]
+* **Search data.** Google Trends shows what people **search**, not what they experience; searchers skew towards younger, online, English-typing residents, and the values are weekly and relative (0 to 100), so they can only give context.
 * **Sources we did not use.** We did not use Reddit or Kaggle data. Reddit posters are a small, younger,
   English-speaking group and would not represent the city; Kaggle traffic or delivery datasets rarely say how
   or where they were collected, so we could not check their origin. We therefore say nothing about traffic
@@ -358,6 +364,8 @@ facts from report/reflection_notes.md, and add one thing each member learned.]]
 | 36 | 07_gaps_outliers | Missing rain hours | 1 | Not filled | Rain starts and stops suddenly; interpolating would invent showers |
 | 37 | 08_spark_job | Rows with no usable value (never sent, or blanked as a sensor failure) | 65,612 | Filtered out in Spark before aggregating | An empty or failed reading must not pull averages towards zero |
 | 38 | 08_spark_job | Joining PM2.5 hours to weather and calendar | 0 | Left joins keep all 55,026 PM2.5 rows; rows_affected = rows that found no weather (0) or no calendar day (0) | A left join never silently drops air-quality hours; unmatched rows are counted |
+| 39 | 05b_load_trends | Google Trends writes very low interest as the text '<1' | 0 | Replaced '<1' with 0.5, then cast the column from text to float | Numbers stored as text cannot be averaged; 0.5 is the middle of 'between 0 and 1' |
+| 40 | 05b_load_trends | Trends values that are still not numbers after casting | 0 | Left missing | Nothing to guess from |
 
 **Gaps per station and pollutant** (before any filling):
 
@@ -791,7 +799,16 @@ Both versions use the same input: `data/manual/spreadsheet_export_city_hourly.cs
 ![The LibreOffice Calc pivot (hour x weekday).](img/m10_pivot_result.png){width=15cm}
 
 
-# Appendix E. Use of generative AI
+# Appendix E. Google Trends: weekly search interest
+
+![Chart 7: weekly search interest in Karnataka for three terms (relative, 0-100).](../outputs/charts/7_trends_weekly.png){width=16cm}
+
+Exported by hand from trends.google.com (Karnataka, 2025-10-01 to 2026-11-20, all categories, web search):
+`data/manual/trends_*.csv`, loaded by `src/05b_load_trends.py`. Google returns weekly values for a range this
+long. Correlations with weekly rain and evening PM2.5 are in `outputs/tables/trends_correlation.csv`.
+
+
+# Appendix F. Use of generative AI
 
 [[TODO-HUMAN: the team fills report/appendix_ai_use.md (tools used, what we asked, what we changed);
 it is pasted here when the submission is built.]]

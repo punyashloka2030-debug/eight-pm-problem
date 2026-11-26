@@ -543,6 +543,23 @@ on the wettest day ({ev['wettest_day']}, {ev['wettest_day_mm']} mm) the evening 
 {ev['wettest_17_23_mean']} µg/m³ against {ev['wettest_matched_17_23_mean']} on matched days.
 
 {image(f"{CHART_DIR}/5_event_diwali.png", "Chart 5: Deepavali night vs matched normal days.", 12)}
+{trends_paragraph(d)}"""
+
+
+def trends_paragraph(d):
+    """Finding 5 (context only): what residents search for, from Google Trends. Empty until M7 is done."""
+    if not d["trends_done"]:
+        return ""
+    corr = pd.read_csv(TABLES / "trends_correlation.csv").set_index(["term", "measure"])["spearman_rho"]
+    weeks = int(pd.read_csv(TABLES / "trends_correlation.csv")["n_weeks"].iloc[0])
+    return f"""
+**Finding 5 (context): residents search for the weather and the air when it changes, not for traffic.**
+Weekly Google Trends interest in Karnataka ({weeks} weeks; chart 7 in Appendix E) rises with the week's rain
+for "bangalore rain" (Spearman rho = {corr[('bangalore rain', 'rain_mm_week')]:+.2f}) and with the week's
+evening PM2.5 for "AQI bangalore" (rho = {corr[('AQI bangalore', 'evening_pm25_week')]:+.2f}), while
+"bangalore traffic" follows neither ({corr[('bangalore traffic', 'rain_mm_week')]:+.2f} and
+{corr[('bangalore traffic', 'evening_pm25_week')]:+.2f}). Searches are weekly and relative, so this is a sign
+that people notice bad-air weeks, not evidence about any single evening.
 """
 
 
@@ -708,9 +725,24 @@ def appendix_d(d):
 """
 
 
+def appendix_trends(d):
+    """Appendix: the Google Trends chart (our text-derived source), once M7 is done."""
+    if not d["trends_done"]:
+        return ""
+    return f"""# Appendix E. Google Trends: weekly search interest
+
+{image(f"{CHART_DIR}/7_trends_weekly.png", "Chart 7: weekly search interest in Karnataka for three terms (relative, 0-100).", 16)}
+
+Exported by hand from trends.google.com (Karnataka, 2025-10-01 to 2026-11-20, all categories, web search):
+`data/manual/trends_*.csv`, loaded by `src/05b_load_trends.py`. Google returns weekly values for a range this
+long. Correlations with weekly rain and evening PM2.5 are in `outputs/tables/trends_correlation.csv`.
+"""
+
+
 def appendix_e(d):
     """Appendix E: generative AI use (the full disclosure lives in its own file)."""
-    return """# Appendix E. Use of generative AI
+    letter = "F" if d["trends_done"] else "E"
+    return f"""# Appendix {letter}. Use of generative AI
 
 [[TODO-HUMAN: the team fills report/appendix_ai_use.md (tools used, what we asked, what we changed);
 it is pasted here when the submission is built.]]
@@ -725,7 +757,7 @@ def build_markdown(d):
     """All sections in the brief's order (a-i), then the appendices."""
     parts = [title_block(d), section_a(d), section_b(d), section_c(d), section_d(d), section_e(d),
              section_f(d), section_g(d), section_h(d), section_i(d),
-             PAGE_BREAK, appendix_a(d), appendix_b(d), appendix_c(d), appendix_d(d), appendix_e(d)]
+             PAGE_BREAK, appendix_a(d), appendix_b(d), appendix_c(d), appendix_d(d), appendix_trends(d), appendix_e(d)]
     return "\n\n".join(parts)
 
 

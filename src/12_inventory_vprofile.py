@@ -127,8 +127,21 @@ REGISTER = [
     {"source": "trends", "name": "Google Trends (Karnataka): bangalore traffic / bangalore rain / AQI bangalore",
      "url": "https://trends.google.com/trends/explore", "method": "Manual CSV export (M7); no scraping",
      "terms_url": "https://policies.google.com/terms",
-     "note": "Weekly relative index 0-100 for a 14-month range; context only, not hourly."},
+     "note": "Exported 2026-11-26 (M7): 4 CSVs, 60 weekly rows each, region Karnataka. Weekly relative index 0-100; context only, not hourly."},
 ]
+
+
+# Sources collected by hand have no API log. Their access date is the day the
+# human-made file was saved (file modification time), or "manual" if it is not there yet.
+MANUAL_SOURCE_FILES = {"calendar": MANUAL / "calendar_verified.csv", "trends": MANUAL / "trends_all_three.csv"}
+
+
+def manual_access_date(source):
+    path = MANUAL_SOURCE_FILES.get(source)
+    if path is None or not path.exists():
+        return "manual"
+    saved = pd.Timestamp(path.stat().st_mtime, unit="s", tz="UTC")
+    return f"{saved:%Y-%m-%d} (manual)"
 
 
 def source_register():
@@ -137,8 +150,8 @@ def source_register():
     for entry in REGISTER:
         sub = log[log["source"] == entry["source"]]
         rows.append({**entry,
-                     "first_access_utc": sub["accessed_utc"].min() if len(sub) else "manual",
-                     "last_access_utc": sub["accessed_utc"].max() if len(sub) else "manual",
+                     "first_access_utc": sub["accessed_utc"].min() if len(sub) else manual_access_date(entry["source"]),
+                     "last_access_utc": sub["accessed_utc"].max() if len(sub) else manual_access_date(entry["source"]),
                      "n_api_requests": len(sub),
                      "mb_downloaded": round(sub["bytes"].sum() / 1e6, 1) if len(sub) else 0})
     pd.DataFrame(rows).to_csv(TABLES / "source_register.csv", index=False)

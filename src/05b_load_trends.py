@@ -73,12 +73,12 @@ def main():
     # Weekly rain (mm) and weekly evening PM2.5 for the same weeks.
     # Trends weeks start on SUNDAY, so we label our days by the Sunday that starts their week.
     weather = pd.read_parquet(CLEAN / "weather_hourly.parquet")
-    weather["week_start"] = (weather["ts_ist"] - pd.to_timedelta((weather["ts_ist"].dt.dayofweek + 1) % 7, unit="D")).dt.date
+    weather["week_start"] = (weather["ts_ist"] - pd.to_timedelta((weather["ts_ist"].dt.day_of_week + 1) % 7, unit="D")).dt.date
     rain = weather.groupby("week_start")["precip_mm"].sum().rename("rain_mm_week")
 
     pm = pd.read_parquet(CLEAN / "readings_clean.parquet")
     pm = pm[(pm["parameter"] == "pm25") & pm["value"].notna() & pm["ts_ist"].dt.hour.between(17, 23)]
-    pm["week_start"] = (pm["ts_ist"] - pd.to_timedelta((pm["ts_ist"].dt.dayofweek + 1) % 7, unit="D")).dt.date
+    pm["week_start"] = (pm["ts_ist"] - pd.to_timedelta((pm["ts_ist"].dt.day_of_week + 1) % 7, unit="D")).dt.date
     evening = pm.groupby("week_start")["value"].mean().rename("evening_pm25_week")
 
     wide_terms = long.pivot(index="week_start", columns="term", values="interest")

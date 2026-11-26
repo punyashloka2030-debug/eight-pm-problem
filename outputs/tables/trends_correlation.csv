@@ -1,0 +1,7 @@
+term,measure,n_weeks,spearman_rho
+AQI bangalore,rain_mm_week,59,-0.53
+AQI bangalore,evening_pm25_week,59,0.52
+bangalore rain,rain_mm_week,59,0.62
+bangalore rain,evening_pm25_week,59,-0.36
+bangalore traffic,rain_mm_week,59,0.03
+bangalore traffic,evening_pm25_week,59,-0.09

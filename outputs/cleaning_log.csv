@@ -37,3 +37,5 @@ id,stage,problem_found,rows_affected,action_taken,why
 36,07_gaps_outliers,Missing rain hours,1,Not filled,Rain starts and stops suddenly; interpolating would invent showers
 37,08_spark_job,"Rows with no usable value (never sent, or blanked as a sensor failure)",65612,Filtered out in Spark before aggregating,An empty or failed reading must not pull averages towards zero
 38,08_spark_job,Joining PM2.5 hours to weather and calendar,0,"Left joins keep all 55,026 PM2.5 rows; rows_affected = rows that found no weather (0) or no calendar day (0)",A left join never silently drops air-quality hours; unmatched rows are counted
+39,05b_load_trends,Google Trends writes very low interest as the text '<1',0,"Replaced '<1' with 0.5, then cast the column from text to float",Numbers stored as text cannot be averaged; 0.5 is the middle of 'between 0 and 1'
+40,05b_load_trends,Trends values that are still not numbers after casting,0,Left missing,Nothing to guess from

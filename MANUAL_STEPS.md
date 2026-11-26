@@ -12,7 +12,7 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 - [ ] M4 Create the GitHub repo, add teammates, push (repo created and pushed 2026-11-26; teammates still to be added)
 - [x] M5 Approve city, dates and station list (2026-11-26: Bengaluru, 2025-10-01 to 2026-11-20, 7 stations at >=60% PM2.5 coverage → data/manual/stations_approved.csv)
 - [x] M6 Verify the holiday and festival calendar draft (2026-11-26: checked against DPAR 16 HHL 2025 via KEA circular 089/2025; 2 dates corrected → data/manual/calendar_verified.csv)
-- [ ] M7 Export Google Trends CSVs
+- [x] M7 Export Google Trends CSVs (2026-11-26: 4 files, 60 weekly rows each, Karnataka)
 - [ ] M8 CPCB portal downloads *(only if OpenAQ coverage is thin; details added if needed)*
 - [ ] M9 Each teammate makes one meaningful commit *(tasks assigned in Phase 2)*
 - [x] M10 Build the hour-by-weekday pivot in LibreOffice Calc (2026-11-26: 168/168 cells MATCH, max diff 0.005)
