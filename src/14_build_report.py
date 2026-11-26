@@ -335,6 +335,18 @@ Severe) is **ordinal**: its categories have an order, but the steps between them
 """
 
 
+def find_log_row(log, text):
+    """
+    The cleaning-log row whose problem_found starts with `text`.
+    We look rows up by their words, not their number, because re-running one
+    stage (e.g. 07) can change the order of the log.
+    """
+    match = log[log["problem_found"].str.startswith(text)]
+    if len(match) != 1:
+        raise ValueError(f"expected exactly one cleaning-log row starting with {text!r}, found {len(match)}")
+    return match.iloc[0]
+
+
 def grouped_inventory(inv):
     """
     Shorter inventory for the main body: one row per table x measurement level, listing the fields.
@@ -395,27 +407,31 @@ def section_e(d):
     worst_gap = pm.loc[pm["longest_gap_hours"].idxmax()]
     verdicts = d["verdicts"]["human_verdict"].value_counts()
 
-    def rows(i):
-        return n(log.loc[i, "rows_affected"])
+    def rows(text):
+        """Rows affected for the log entry whose problem starts with `text`."""
+        return n(find_log_row(log, text)["rows_affected"])
+
+    def log_id(text):
+        return int(find_log_row(log, text).name)
 
     # Short wording for the main body; the log's own full wording is in Appendix A.
     # Each row points at a log id, so the row counts always come from the log itself.
     key = pd.DataFrame([
-        ["Time zones", "UTC timestamps (text)", rows(7), "Parsed, converted to IST; checked: " + rows(8) + " mismatches", 7],
-        ["Time alignment", "Weather hours start at :30 IST", rows(15), "Lined up with air hours (mid-hour value; rain split half/half)", 15],
-        ["Type casting", "Values that are not numbers", rows(10), "pd.to_numeric, then float", 10],
-        ["Units", "NO2 / CO in ppb", f"{rows(11)} / {rows(12)}", "Converted to µg/m³ / mg/m³ (25 °C, 1 atm)", 11],
-        ["Missing values", "Hours never sent", rows(18), "Counted per station (Appendix A)", 18],
-        ["Missing values", "Gaps of 1-3 hours", rows(32), "Forward-filled, flagged is_filled", 32],
-        ["Missing values", "Gaps over 3 hours", rows(33), "Left empty", 33],
-        ["Missing values", "Evenings with < 6 of 7 real hours", rows(34), "Not used for peak timing", 34],
-        ["Missing values", "Missing rain hours", rows(36), "Never filled", 36],
-        ["Outliers: failure", "Exact zeros", rows(23), "Blanked", 23],
-        ["Outliers: failure", "Flat-lines (>= 6 h same value)", rows(24), "Blanked", 24],
-        ["Outliers: failure", "Isolated 1-hour spikes", rows(25), "Blanked", 25],
-        ["Outliers: real", "Festival-night extremes", rows(26), "Kept, flagged", 26],
-        ["Outliers: real", "City-wide extremes (3+ stations)", rows(28), "Kept, flagged", 28],
-        ["Outliers: human (M11)", "Top 10 unexplained PM2.5 values", f"{rows(30)} / {rows(31)}", "Failure episodes blanked / real ones kept", 30],
+        ["Time zones", "UTC timestamps (text)", rows("OpenAQ timestamps are ISO-8601"), "Parsed, converted to IST; checked: " + rows("Need proof that our UTC") + " mismatches", log_id("OpenAQ timestamps are ISO-8601")],
+        ["Time alignment", "Weather hours start at :30 IST", rows("Weather hours start at :30"), "Lined up with air hours (mid-hour value; rain split half/half)", log_id("Weather hours start at :30")],
+        ["Type casting", "Values that are not numbers", rows("Values must be numbers"), "pd.to_numeric, then float", log_id("Values must be numbers")],
+        ["Units", "NO2 / CO in ppb", f"{rows("NO2 arrives in ppb")} / {rows("CO arrives in ppb")}", "Converted to µg/m³ / mg/m³ (25 °C, 1 atm)", log_id("NO2 arrives in ppb")],
+        ["Missing values", "Hours never sent", rows("Hours the API never sent"), "Counted per station (Appendix A)", log_id("Hours the API never sent")],
+        ["Missing values", "Gaps of 1-3 hours", rows("Short gaps (<= 3"), "Forward-filled, flagged is_filled", log_id("Short gaps (<= 3")],
+        ["Missing values", "Gaps over 3 hours", rows("Gaps longer than 3"), "Left empty", log_id("Gaps longer than 3")],
+        ["Missing values", "Evenings with < 6 of 7 real hours", rows("Station-evenings with fewer"), "Not used for peak timing", log_id("Station-evenings with fewer")],
+        ["Missing values", "Missing rain hours", rows("Missing rain hours"), "Never filled", log_id("Missing rain hours")],
+        ["Outliers: failure", "Exact zeros", rows("Exact zero readings"), "Blanked", log_id("Exact zero readings")],
+        ["Outliers: failure", "Flat-lines (>= 6 h same value)", rows("Flat-lines"), "Blanked", log_id("Flat-lines")],
+        ["Outliers: failure", "Isolated 1-hour spikes", rows("Single-hour spikes"), "Blanked", log_id("Single-hour spikes")],
+        ["Outliers: real", "Festival-night extremes", rows("Extreme values (above each station's 99.5th percentile): real_event_festival"), "Kept, flagged", log_id("Extreme values (above each station's 99.5th percentile): real_event_festival")],
+        ["Outliers: real", "City-wide extremes (3+ stations)", rows("Extreme values (above each station's 99.5th percentile): real_event_citywide"), "Kept, flagged", log_id("Extreme values (above each station's 99.5th percentile): real_event_citywide")],
+        ["Outliers: human (M11)", "Top 10 unexplained PM2.5 values", f"{rows("Manual review (M11) of 10")} / {rows("Manual review (M11): episodes judged real")}", "Failure episodes blanked / real ones kept", log_id("Manual review (M11) of 10")],
     ], columns=["Topic", "Problem found", "Rows", "Action taken", "Log #"])
 
     return f"""# e. Cleaning log
@@ -564,7 +580,7 @@ def section_h(d):
     """h. Limitations and bias."""
     s = d["s"]
     log = d["log"].set_index("id")
-    unusable = n(log.loc[34, "rows_affected"])
+    unusable = n(find_log_row(log, "Station-evenings with fewer")["rows_affected"])
     pm = d["gaps"][d["gaps"]["parameter"] == "pm25"]
     missing_range = f"{pm['pct_missing'].min()}% to {pm['pct_missing'].max()}%"
     trends_line = ("Google Trends shows what people **search**, not what they experience; searchers skew "

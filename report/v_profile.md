@@ -4,7 +4,7 @@
 |---|---:|---:|---:|---|---|
 | OpenAQ hourly readings | 204,584 | 193.2 | 1.4 | JSON (nested records) -> parquet | 28 series x 1 value/hour = 28 new values/hour (112 raw 15-min readings/hour behind them); newest reading 1.8 h old when we downloaded |
 | Open-Meteo weather | 9,984 | 0.5 | 0.15 | JSON (parallel arrays) -> parquet | 1 row/hour for the city; archive published with a delay of a few days |
-| Calendar | 416 | 0 | 0.04 | CSV built by hand | 1 row/day; fixed once a year by government notification |
+| Calendar | 416 | 0 | 0.05 | CSV built by hand | 1 row/day; fixed once a year by government notification |
 | Full analysis grid (readings_clean) | 279,552 | 0 | 1.4 | parquet (also MySQL table readings) | every station x pollutant x hour, gaps included as empty rows |
 
 **Volume.** 204,584 hourly air-quality rows from 7 stations over 14 months, 193.2 MB of raw JSON in 392 API pages. The full hourly grid (with gaps as empty rows) is 279,552 rows.

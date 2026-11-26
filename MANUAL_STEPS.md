@@ -11,7 +11,7 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 - [x] M3 Install Java 17, verify with a tiny Spark job
 - [ ] M4 Create the GitHub repo, add teammates, push (repo created and pushed 2026-11-26; teammates still to be added)
 - [x] M5 Approve city, dates and station list (2026-11-26: Bengaluru, 2025-10-01 to 2026-11-20, 7 stations at >=60% PM2.5 coverage → data/manual/stations_approved.csv)
-- [ ] M6 Verify the holiday and festival calendar draft (14 rows flagged needs_check)
+- [x] M6 Verify the holiday and festival calendar draft (2026-11-26: checked against DPAR 16 HHL 2025 via KEA circular 089/2025; 2 dates corrected → data/manual/calendar_verified.csv)
 - [ ] M7 Export Google Trends CSVs
 - [ ] M8 CPCB portal downloads *(only if OpenAQ coverage is thin; details added if needed)*
 - [ ] M9 Each teammate makes one meaningful commit *(tasks assigned in Phase 2)*

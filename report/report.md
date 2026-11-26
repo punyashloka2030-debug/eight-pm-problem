@@ -49,12 +49,10 @@ source (search interest).
 |---|---|---|---|---|
 | OpenAQ v3 API | https://api.openaq.org/v3 | API (JSON), scripts 01/02, key in .env, month windows, cached | https://docs.openaq.org/about/terms | 2026-11-26 |
 | Open-Meteo Historical Weather API | https://archive-api.open-meteo.com/v1/archive | API (JSON), script 03, timezone=GMT, cached | https://open-meteo.com/en/terms | 2026-11-26 |
-| Karnataka general holidays 2025 (Notification-I) + central list 2026 | https://cag.gov.in/uploads/media/Karnataka-State-Holidays-2025-067764409e26023-56493682.pdf ; https://cag.gov.in/uploads/media/Holiday-List-2026-069521fe6f358d0-89936988.pdf | Typed in by hand (04_build_calendar.py), human check M6 | Government publication | manual |
+| Karnataka general holidays 2025 (DPAR 16 HHL 2024) and 2026 (DPAR 16 HHL 2025) + central list 2026 | https://cag.gov.in/uploads/media/Karnataka-State-Holidays-2025-067764409e26023-56493682.pdf ; https://kea.co.in/wp-content/uploads/2025/11/Circular-No-089-2025-KARNATAKA-GOVERNMENT-HOLIDAYS-FOR-THE-YEAR-2026.pdf ; https://cag.gov.in/uploads/media/Holiday-List-2026-069521fe6f358d0-89936988.pdf | Typed in by hand (04_build_calendar.py), checked date by date in M6 -> calendar_verified.csv | Government publication | manual |
 | Google Trends (Karnataka): bangalore traffic / bangalore rain / AQI bangalore | https://trends.google.com/trends/explore | Manual CSV export (M7); no scraping | https://policies.google.com/terms | manual |
 
 [[TODO-HUMAN: Google Trends CSVs not exported yet (manual step M7); the Trends row has no access date until then.]]
-
-[[TODO-HUMAN: the calendar is still the draft; 14 dates await the human check (manual step M6). Re-run `make all` after saving data/manual/calendar_verified.csv.]]
 
 **Data inventory.** Every field we use (33 in all), grouped by table and level of
 measurement; the full inventory with an example value per field is in Appendix A. The AQI category (Good to
@@ -84,7 +82,7 @@ Severe) is **ordinal**: its categories have an order, but the steps between them
 |---|---|---|---|---|
 | OpenAQ hourly readings | 204,584 | 193.2 | 1.4 | JSON (nested records) -> parquet |
 | Open-Meteo weather | 9,984 | 0.5 | 0.15 | JSON (parallel arrays) -> parquet |
-| Calendar | 416 | 0.0 | 0.04 | CSV built by hand |
+| Calendar | 416 | 0.0 | 0.05 | CSV built by hand |
 | Full analysis grid (readings_clean) | 279,552 | 0.0 | 1.4 | parquet (also MySQL table readings) |
 
 **OpenAQ hourly readings:** 28 series x 1 value/hour = 28 new values/hour (112 raw 15-min readings/hour behind them); newest reading 1.8 h old when we downloaded; **Open-Meteo weather:** 1 row/hour for the city; archive published with a delay of a few days; **Calendar:** 1 row/day; fixed once a year by government notification; **Full analysis grid (readings_clean):** every station x pollutant x hour, gaps included as empty rows
@@ -115,10 +113,10 @@ the charts and this report. In plain words:
 |---|---|---|---|
 | 1_load | Load readings_clean (full station x parameter x hour grid) | 279,552 | 1.9 |
 | 2_clean | Drop missing hours and QC failures (real events kept) | 213,940 | 0.3 |
-| 3_resample | Resample to hourly (date_trunc + avg) per station x parameter | 213,940 | 0.8 |
+| 3_resample | Resample to hourly (date_trunc + avg) per station x parameter | 213,940 | 1.0 |
 | 4a_pm25 | PM2.5 station-hours only | 55,026 | 0.3 |
-| 4b_join | PM2.5 ⋈ weather_hourly ⋈ calendar (left joins) | 55,026 | 0.5 |
-| 5a_hour_weekday | GROUP BY weekday x hour (heatmap) | 168 | 0.3 |
+| 4b_join | PM2.5 ⋈ weather_hourly ⋈ calendar (left joins) | 55,026 | 0.6 |
+| 5a_hour_weekday | GROUP BY weekday x hour (heatmap) | 168 | 0.2 |
 | 5b_month_hour | GROUP BY month x hour | 336 | 0.2 |
 | 5c_rain_hour | GROUP BY rain/dry x hour | 48 | 0.4 |
 
@@ -210,7 +208,7 @@ to midnight) **inside the same month and the same day type** (working day or wee
 monsoon season itself does not create the difference. Across 409 rainy and
 1027 dry station-evenings (79 rainy dates, 15
 month-by-day-type groups), the rainy-evening peak is **29.3% lower** (95%
-confidence interval -43.4% to -13.1%) and comes
+confidence interval -43.4% to -13.0%) and comes
 **0.81 hours earlier** (95% CI -1.33 to
 -0.36 h). A regression that also holds each station constant agrees:
 -34.7% and -0.92 h (Appendix C).
@@ -587,9 +585,9 @@ ORDER BY c.season, c.is_holiday, w.is_rain_hour
 | post_monsoon |            0 |              1 |                23.1 |               583 |
 | post_monsoon |            1 |              0 |                41.1 |              1625 |
 | post_monsoon |            1 |              1 |                26.8 |               276 |
-| pre_monsoon  |            0 |              0 |                43.7 |              2121 |
+| pre_monsoon  |            0 |              0 |                43.9 |              2115 |
 | pre_monsoon  |            0 |              1 |                30   |               142 |
-| pre_monsoon  |            1 |              0 |                43.8 |              1260 |
+| pre_monsoon  |            1 |              0 |                43.6 |              1266 |
 | pre_monsoon  |            1 |              1 |                28.4 |                79 |
 | sw_monsoon   |            0 |              0 |                22   |              2225 |
 | sw_monsoon   |            0 |              1 |                18.3 |               973 |
@@ -620,18 +618,18 @@ ORDER BY r.value_raw DESC
 LIMIT 10
 ```
 
-| date       | holiday_name                               | name                                   |   hour_ist |   pm25 | qc_flag             |
-|:-----------|:-------------------------------------------|:---------------------------------------|-----------:|-------:|:--------------------|
-| 2026-11-08 | Naraka Chaturdashi / Deepavali             | Silk Board, Bengaluru - KSPCB          |         21 |    355 | real_event_festival |
-| 2026-11-08 | Naraka Chaturdashi / Deepavali             | Silk Board, Bengaluru - KSPCB          |         22 |    304 | real_event_festival |
-| 2026-11-08 | Naraka Chaturdashi / Deepavali             | Silk Board, Bengaluru - KSPCB          |         23 |    302 | real_event_festival |
-| 2026-11-08 | Naraka Chaturdashi / Deepavali             | Silk Board, Bengaluru - KSPCB          |         20 |    285 | real_event_festival |
-| 2026-11-08 | Naraka Chaturdashi / Deepavali             | Jayanagar 5th Block, Bengaluru - KSPCB |         20 |    251 | real_event_festival |
-| 2026-11-09 | Deepavali (Lakshmi Pooja / Govardhan Puja) | Jayanagar 5th Block, Bengaluru - KSPCB |         20 |    250 | real_event_festival |
-| 2026-11-09 | Deepavali (Lakshmi Pooja / Govardhan Puja) | Jayanagar 5th Block, Bengaluru - KSPCB |         19 |    244 | real_event_festival |
-| 2026-11-09 | Deepavali (Lakshmi Pooja / Govardhan Puja) | Hebbal, Bengaluru - KSPCB              |         21 |    226 | real_event_festival |
-| 2025-10-21 | Deepavali (Lakshmi Pooja / Amavasya)       | Jayanagar 5th Block, Bengaluru - KSPCB |         21 |    221 | real_event_festival |
-| 2026-11-10 | Balipadyami, Deepavali                     | Jayanagar 5th Block, Bengaluru - KSPCB |         22 |    216 | real_event_festival |
+| date       | holiday_name                         | name                                   |   hour_ist |   pm25 | qc_flag             |
+|:-----------|:-------------------------------------|:---------------------------------------|-----------:|-------:|:--------------------|
+| 2026-11-08 | Naraka Chaturdashi / Deepavali       | Silk Board, Bengaluru - KSPCB          |         21 |    355 | real_event_festival |
+| 2026-11-08 | Naraka Chaturdashi / Deepavali       | Silk Board, Bengaluru - KSPCB          |         22 |    304 | real_event_festival |
+| 2026-11-08 | Naraka Chaturdashi / Deepavali       | Silk Board, Bengaluru - KSPCB          |         23 |    302 | real_event_festival |
+| 2026-11-08 | Naraka Chaturdashi / Deepavali       | Silk Board, Bengaluru - KSPCB          |         20 |    285 | real_event_festival |
+| 2026-11-08 | Naraka Chaturdashi / Deepavali       | Jayanagar 5th Block, Bengaluru - KSPCB |         20 |    251 | real_event_festival |
+| 2026-11-09 | Govardhan Puja (Deepavali)           | Jayanagar 5th Block, Bengaluru - KSPCB |         20 |    250 | real_event_festival |
+| 2026-11-09 | Govardhan Puja (Deepavali)           | Jayanagar 5th Block, Bengaluru - KSPCB |         19 |    244 | real_event_festival |
+| 2026-11-09 | Govardhan Puja (Deepavali)           | Hebbal, Bengaluru - KSPCB              |         21 |    226 | real_event_festival |
+| 2025-10-21 | Deepavali (Lakshmi Pooja / Amavasya) | Jayanagar 5th Block, Bengaluru - KSPCB |         21 |    221 | real_event_festival |
+| 2026-11-10 | Balipadyami, Deepavali               | Jayanagar 5th Block, Bengaluru - KSPCB |         22 |    216 | real_event_festival |
 
 ### Q7: When does the evening peak happen? (window function, MySQL 8)
 
@@ -678,9 +676,9 @@ PEAK HEIGHT (log)
 ==============================================================================
 Dep. Variable:               log_peak   R-squared:                       0.474
 Model:                            OLS   Adj. R-squared:                  0.466
-Method:                 Least Squares   F-statistic:                     59.35
-Date:                Thu, 26 Nov 2026   Prob (F-statistic):           3.69e-85
-Time:                        18:35:38   Log-Likelihood:                -841.72
+Method:                 Least Squares   F-statistic:                     59.43
+Date:                Thu, 26 Nov 2026   Prob (F-statistic):           3.25e-85
+Time:                        19:21:49   Log-Likelihood:                -841.71
 No. Observations:                1436   AIC:                             1727.
 Df Residuals:                    1414   BIC:                             1843.
 Df Model:                          21                                         
@@ -688,33 +686,33 @@ Covariance Type:              cluster
 ==============================================================================================
                                  coef    std err          z      P>|z|      [0.025      0.975]
 ----------------------------------------------------------------------------------------------
-Intercept                      3.6040      0.127     28.457      0.000       3.356       3.852
-C(month)[T.2025-11]            0.1727      0.126      1.375      0.169      -0.073       0.419
-C(month)[T.2025-12]            0.2640      0.125      2.104      0.035       0.018       0.510
-C(month)[T.2026-01]            0.1295      0.127      1.016      0.310      -0.120       0.379
-C(month)[T.2026-02]            0.1260      0.128      0.984      0.325      -0.125       0.377
-C(month)[T.2026-03]            0.3503      0.125      2.794      0.005       0.105       0.596
-C(month)[T.2026-04]            0.2331      0.124      1.881      0.060      -0.010       0.476
-C(month)[T.2026-05]           -0.0230      0.146     -0.157      0.875      -0.310       0.264
-C(month)[T.2026-06]           -0.1870      0.161     -1.165      0.244      -0.502       0.128
-C(month)[T.2026-07]           -0.3531      0.139     -2.547      0.011      -0.625      -0.081
-C(month)[T.2026-08]           -0.3131      0.149     -2.100      0.036      -0.605      -0.021
+Intercept                      3.6033      0.127     28.450      0.000       3.355       3.852
+C(month)[T.2025-11]            0.1727      0.126      1.375      0.169      -0.074       0.419
+C(month)[T.2025-12]            0.2639      0.126      2.103      0.035       0.018       0.510
+C(month)[T.2026-01]            0.1293      0.127      1.015      0.310      -0.120       0.379
+C(month)[T.2026-02]            0.1258      0.128      0.983      0.326      -0.125       0.377
+C(month)[T.2026-03]            0.3506      0.125      2.795      0.005       0.105       0.596
+C(month)[T.2026-04]            0.2331      0.124      1.880      0.060      -0.010       0.476
+C(month)[T.2026-05]           -0.0228      0.146     -0.156      0.876      -0.310       0.264
+C(month)[T.2026-06]           -0.1869      0.161     -1.164      0.244      -0.502       0.128
+C(month)[T.2026-07]           -0.3532      0.139     -2.547      0.011      -0.625      -0.081
+C(month)[T.2026-08]           -0.3131      0.149     -2.101      0.036      -0.605      -0.021
 C(month)[T.2026-09]            0.0037      0.134      0.027      0.978      -0.260       0.267
-C(month)[T.2026-10]           -0.0466      0.149     -0.313      0.754      -0.339       0.245
-C(month)[T.2026-11]            0.4323      0.150      2.885      0.004       0.139       0.726
-C(day_type)[T.working_day]     0.0068      0.038      0.178      0.859      -0.068       0.082
-C(station_id)[T.BLR5607]      -0.2473      0.048     -5.183      0.000      -0.341      -0.154
-C(station_id)[T.BLR6973]       0.3741      0.035     10.637      0.000       0.305       0.443
-C(station_id)[T.BLR6974]       0.0155      0.041      0.375      0.708      -0.065       0.096
-C(station_id)[T.BLR6975]       0.4152      0.044      9.346      0.000       0.328       0.502
-C(station_id)[T.BLR6983]       0.0489      0.039      1.246      0.213      -0.028       0.126
+C(month)[T.2026-10]           -0.0467      0.149     -0.314      0.754      -0.339       0.245
+C(month)[T.2026-11]            0.4322      0.150      2.884      0.004       0.138       0.726
+C(day_type)[T.working_day]     0.0079      0.038      0.207      0.836      -0.067       0.083
+C(station_id)[T.BLR5607]      -0.2473      0.048     -5.184      0.000      -0.341      -0.154
+C(station_id)[T.BLR6973]       0.3741      0.035     10.639      0.000       0.305       0.443
+C(station_id)[T.BLR6974]       0.0155      0.041      0.375      0.707      -0.065       0.096
+C(station_id)[T.BLR6975]       0.4153      0.044      9.346      0.000       0.328       0.502
+C(station_id)[T.BLR6983]       0.0489      0.039      1.247      0.212      -0.028       0.126
 C(station_id)[T.BLR6984]       0.1180      0.042      2.799      0.005       0.035       0.201
-rainy                         -0.4263      0.075     -5.718      0.000      -0.572      -0.280
+rainy                         -0.4264      0.075     -5.719      0.000      -0.573      -0.280
 ==============================================================================
-Omnibus:                      137.611   Durbin-Watson:                   1.147
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):              375.036
-Skew:                           0.514   Prob(JB):                     3.65e-82
-Kurtosis:                       5.283   Cond. No.                         20.2
+Omnibus:                      137.542   Durbin-Watson:                   1.147
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              374.832
+Skew:                           0.514   Prob(JB):                     4.04e-82
+Kurtosis:                       5.282   Cond. No.                         20.2
 ==============================================================================
 
 Notes:
@@ -723,45 +721,45 @@ Notes:
 PEAK HOUR
                             OLS Regression Results                            
 ==============================================================================
-Dep. Variable:              peak_hour   R-squared:                       0.091
-Model:                            OLS   Adj. R-squared:                  0.078
-Method:                 Least Squares   F-statistic:                     5.477
-Date:                Thu, 26 Nov 2026   Prob (F-statistic):           5.92e-12
-Time:                        18:35:38   Log-Likelihood:                -2819.7
-No. Observations:                1436   AIC:                             5683.
-Df Residuals:                    1414   BIC:                             5799.
+Dep. Variable:              peak_hour   R-squared:                       0.090
+Model:                            OLS   Adj. R-squared:                  0.077
+Method:                 Least Squares   F-statistic:                     5.460
+Date:                Thu, 26 Nov 2026   Prob (F-statistic):           6.57e-12
+Time:                        19:21:49   Log-Likelihood:                -2820.4
+No. Observations:                1436   AIC:                             5685.
+Df Residuals:                    1414   BIC:                             5801.
 Df Model:                          21                                         
 Covariance Type:              cluster                                         
 ==============================================================================================
                                  coef    std err          z      P>|z|      [0.025      0.975]
 ----------------------------------------------------------------------------------------------
-Intercept                     20.7586      0.319     64.976      0.000      20.132      21.385
-C(month)[T.2025-11]           -0.1094      0.400     -0.273      0.785      -0.894       0.675
-C(month)[T.2025-12]            0.0308      0.307      0.100      0.920      -0.571       0.633
-C(month)[T.2026-01]           -0.5089      0.363     -1.401      0.161      -1.221       0.203
-C(month)[T.2026-02]           -0.2739      0.334     -0.820      0.412      -0.929       0.381
-C(month)[T.2026-03]           -0.2078      0.320     -0.648      0.517      -0.836       0.420
-C(month)[T.2026-04]           -0.7160      0.307     -2.329      0.020      -1.319      -0.113
-C(month)[T.2026-05]           -0.3954      0.332     -1.193      0.233      -1.045       0.254
-C(month)[T.2026-06]           -0.4528      0.386     -1.173      0.241      -1.209       0.304
-C(month)[T.2026-07]           -0.7422      0.343     -2.161      0.031      -1.415      -0.069
-C(month)[T.2026-08]            0.0408      0.369      0.111      0.912      -0.683       0.765
-C(month)[T.2026-09]           -0.3251      0.339     -0.959      0.337      -0.989       0.339
-C(month)[T.2026-10]           -0.0724      0.376     -0.193      0.847      -0.809       0.664
-C(month)[T.2026-11]            0.1855      0.307      0.604      0.546      -0.416       0.787
-C(day_type)[T.working_day]     0.1919      0.130      1.477      0.140      -0.063       0.446
-C(station_id)[T.BLR5607]      -0.5981      0.209     -2.865      0.004      -1.007      -0.189
-C(station_id)[T.BLR6973]       0.1050      0.188      0.559      0.576      -0.263       0.473
-C(station_id)[T.BLR6974]      -0.3905      0.178     -2.196      0.028      -0.739      -0.042
-C(station_id)[T.BLR6975]       0.0497      0.195      0.255      0.799      -0.333       0.432
-C(station_id)[T.BLR6983]      -0.0090      0.176     -0.051      0.959      -0.354       0.336
-C(station_id)[T.BLR6984]       0.0792      0.177      0.447      0.655      -0.268       0.426
-rainy                         -0.9212      0.196     -4.700      0.000      -1.305      -0.537
+Intercept                     20.7826      0.319     65.224      0.000      20.158      21.407
+C(month)[T.2025-11]           -0.1090      0.397     -0.275      0.784      -0.887       0.669
+C(month)[T.2025-12]            0.0317      0.306      0.103      0.918      -0.569       0.632
+C(month)[T.2026-01]           -0.5054      0.363     -1.391      0.164      -1.217       0.207
+C(month)[T.2026-02]           -0.2707      0.332     -0.815      0.415      -0.922       0.381
+C(month)[T.2026-03]           -0.1980      0.322     -0.615      0.538      -0.829       0.433
+C(month)[T.2026-04]           -0.7157      0.306     -2.338      0.019      -1.316      -0.116
+C(month)[T.2026-05]           -0.4001      0.330     -1.212      0.226      -1.047       0.247
+C(month)[T.2026-06]           -0.4554      0.385     -1.184      0.236      -1.209       0.298
+C(month)[T.2026-07]           -0.7403      0.343     -2.158      0.031      -1.413      -0.068
+C(month)[T.2026-08]            0.0415      0.369      0.113      0.910      -0.681       0.764
+C(month)[T.2026-09]           -0.3258      0.338     -0.963      0.336      -0.989       0.337
+C(month)[T.2026-10]           -0.0690      0.375     -0.184      0.854      -0.803       0.665
+C(month)[T.2026-11]            0.1885      0.304      0.620      0.536      -0.408       0.785
+C(day_type)[T.working_day]     0.1548      0.131      1.185      0.236      -0.101       0.411
+C(station_id)[T.BLR5607]      -0.5977      0.209     -2.865      0.004      -1.007      -0.189
+C(station_id)[T.BLR6973]       0.1046      0.188      0.557      0.578      -0.263       0.473
+C(station_id)[T.BLR6974]      -0.3918      0.178     -2.203      0.028      -0.740      -0.043
+C(station_id)[T.BLR6975]       0.0486      0.195      0.249      0.804      -0.334       0.431
+C(station_id)[T.BLR6983]      -0.0101      0.176     -0.057      0.954      -0.356       0.335
+C(station_id)[T.BLR6984]       0.0776      0.177      0.438      0.661      -0.270       0.425
+rainy                         -0.9179      0.196     -4.693      0.000      -1.301      -0.535
 ==============================================================================
-Omnibus:                       76.643   Durbin-Watson:                   1.737
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):               31.344
-Skew:                          -0.085   Prob(JB):                     1.56e-07
-Kurtosis:                       2.296   Cond. No.                         20.2
+Omnibus:                       76.528   Durbin-Watson:                   1.737
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               31.269
+Skew:                          -0.083   Prob(JB):                     1.62e-07
+Kurtosis:                       2.297   Cond. No.                         20.2
 ==============================================================================
 
 Notes:

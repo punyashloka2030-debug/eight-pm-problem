@@ -111,7 +111,7 @@ BLR5548,2026-03-26,22,31.4,Thursday,2026-03,False,False,pre_monsoon,26.085714285
 BLR5548,2026-03-27,22,26.9,Friday,2026-03,False,False,pre_monsoon,24.185714285714287,False,working_day,0.0,0.0,dry
 BLR5548,2026-03-28,19,33.2,Saturday,2026-03,True,False,pre_monsoon,29.885714285714293,False,holiday_or_weekend,0.0,0.0,dry
 BLR5548,2026-03-29,22,34.2,Sunday,2026-03,True,False,pre_monsoon,29.2,False,holiday_or_weekend,0.39999999999999997,0.4,other
-BLR5548,2026-03-31,23,31.2,Tuesday,2026-03,False,False,pre_monsoon,25.842857142857138,True,working_day,0.0,0.0,dry
+BLR5548,2026-03-31,23,31.2,Tuesday,2026-03,True,False,pre_monsoon,25.842857142857138,True,holiday_or_weekend,0.0,0.0,dry
 BLR5548,2026-04-01,20,30.4,Wednesday,2026-04,False,False,pre_monsoon,26.45714285714286,False,working_day,0.0,0.0,dry
 BLR5548,2026-04-02,22,29.2,Thursday,2026-04,False,False,pre_monsoon,24.028571428571432,False,working_day,0.0,0.0,dry
 BLR5548,2026-04-03,21,36.6,Friday,2026-04,True,False,pre_monsoon,30.5,False,holiday_or_weekend,0.0,0.0,dry
@@ -394,8 +394,8 @@ BLR5607,2026-03-16,18,31.3,Monday,2026-03,False,False,pre_monsoon,27.11428571428
 BLR5607,2026-03-27,23,55.6,Friday,2026-03,False,False,pre_monsoon,40.08571428571429,True,working_day,0.0,0.0,dry
 BLR5607,2026-03-28,21,46.8,Saturday,2026-03,True,False,pre_monsoon,29.87142857142857,False,holiday_or_weekend,0.0,0.0,dry
 BLR5607,2026-03-29,21,69.3,Sunday,2026-03,True,False,pre_monsoon,43.57142857142857,False,holiday_or_weekend,0.39999999999999997,0.4,other
-BLR5607,2026-03-30,19,40.5,Monday,2026-03,True,False,pre_monsoon,35.68333333333334,False,holiday_or_weekend,0.0,0.1,other
-BLR5607,2026-03-31,17,46.1,Tuesday,2026-03,False,False,pre_monsoon,29.157142857142855,True,working_day,0.0,0.0,dry
+BLR5607,2026-03-30,19,40.5,Monday,2026-03,False,False,pre_monsoon,35.68333333333334,False,working_day,0.0,0.1,other
+BLR5607,2026-03-31,17,46.1,Tuesday,2026-03,True,False,pre_monsoon,29.157142857142855,True,holiday_or_weekend,0.0,0.0,dry
 BLR5607,2026-04-01,23,27.6,Wednesday,2026-04,False,False,pre_monsoon,20.814285714285713,True,working_day,0.0,0.0,dry
 BLR5607,2026-04-28,19,28.2,Tuesday,2026-04,False,False,pre_monsoon,27.95714285714286,False,working_day,0.0,0.0,dry
 BLR5607,2026-04-30,22,39.9,Thursday,2026-04,False,False,pre_monsoon,26.40857142857143,False,working_day,3.0,3.0,rainy
@@ -617,8 +617,8 @@ BLR6973,2026-03-26,21,61.0,Thursday,2026-03,False,False,pre_monsoon,50.142857142
 BLR6973,2026-03-27,20,68.0,Friday,2026-03,False,False,pre_monsoon,61.114285714285714,False,working_day,0.0,0.0,dry
 BLR6973,2026-03-28,19,78.0,Saturday,2026-03,True,False,pre_monsoon,69.42857142857143,False,holiday_or_weekend,0.0,0.0,dry
 BLR6973,2026-03-29,19,60.0,Sunday,2026-03,True,False,pre_monsoon,55.24285714285714,False,holiday_or_weekend,0.39999999999999997,0.4,other
-BLR6973,2026-03-30,21,75.5,Monday,2026-03,True,False,pre_monsoon,63.857142857142854,False,holiday_or_weekend,0.0,0.1,other
-BLR6973,2026-03-31,23,79.0,Tuesday,2026-03,False,False,pre_monsoon,59.25714285714286,True,working_day,0.0,0.0,dry
+BLR6973,2026-03-30,21,75.5,Monday,2026-03,False,False,pre_monsoon,63.857142857142854,False,working_day,0.0,0.1,other
+BLR6973,2026-03-31,23,79.0,Tuesday,2026-03,True,False,pre_monsoon,59.25714285714286,True,holiday_or_weekend,0.0,0.0,dry
 BLR6973,2026-04-01,19,55.5,Wednesday,2026-04,False,False,pre_monsoon,48.31428571428571,False,working_day,0.0,0.0,dry
 BLR6973,2026-04-02,21,64.5,Thursday,2026-04,False,False,pre_monsoon,56.142857142857146,False,working_day,0.0,0.0,dry
 BLR6973,2026-04-03,21,94.3,Friday,2026-04,True,False,pre_monsoon,68.32857142857144,False,holiday_or_weekend,0.0,0.0,dry
@@ -906,8 +906,8 @@ BLR6974,2026-03-26,21,33.5,Thursday,2026-03,False,False,pre_monsoon,27.442857142
 BLR6974,2026-03-27,22,41.0,Friday,2026-03,False,False,pre_monsoon,35.07142857142857,False,working_day,0.0,0.0,dry
 BLR6974,2026-03-28,21,42.5,Saturday,2026-03,True,False,pre_monsoon,38.885714285714286,False,holiday_or_weekend,0.0,0.0,dry
 BLR6974,2026-03-29,23,39.0,Sunday,2026-03,True,False,pre_monsoon,34.42857142857143,True,holiday_or_weekend,0.39999999999999997,0.4,other
-BLR6974,2026-03-30,22,37.0,Monday,2026-03,True,False,pre_monsoon,32.81428571428571,False,holiday_or_weekend,0.0,0.1,other
-BLR6974,2026-03-31,23,39.0,Tuesday,2026-03,False,False,pre_monsoon,29.428571428571427,True,working_day,0.0,0.0,dry
+BLR6974,2026-03-30,22,37.0,Monday,2026-03,False,False,pre_monsoon,32.81428571428571,False,working_day,0.0,0.1,other
+BLR6974,2026-03-31,23,39.0,Tuesday,2026-03,True,False,pre_monsoon,29.428571428571427,True,holiday_or_weekend,0.0,0.0,dry
 BLR6974,2026-04-01,19,40.5,Wednesday,2026-04,False,False,pre_monsoon,30.185714285714287,False,working_day,0.0,0.0,dry
 BLR6974,2026-04-02,21,48.5,Thursday,2026-04,False,False,pre_monsoon,37.614285714285714,False,working_day,0.0,0.0,dry
 BLR6974,2026-04-03,21,62.7,Friday,2026-04,True,False,pre_monsoon,40.771428571428565,False,holiday_or_weekend,0.0,0.0,dry
@@ -1227,8 +1227,8 @@ BLR6975,2026-03-26,21,52.0,Thursday,2026-03,False,False,pre_monsoon,43.5,False,w
 BLR6975,2026-03-27,20,63.0,Friday,2026-03,False,False,pre_monsoon,52.714285714285715,False,working_day,0.0,0.0,dry
 BLR6975,2026-03-28,21,67.7,Saturday,2026-03,True,False,pre_monsoon,61.357142857142854,False,holiday_or_weekend,0.0,0.0,dry
 BLR6975,2026-03-29,20,60.5,Sunday,2026-03,True,False,pre_monsoon,54.357142857142854,False,holiday_or_weekend,0.39999999999999997,0.4,other
-BLR6975,2026-03-30,20,61.5,Monday,2026-03,True,False,pre_monsoon,55.6,False,holiday_or_weekend,0.0,0.1,other
-BLR6975,2026-03-31,23,66.0,Tuesday,2026-03,False,False,pre_monsoon,49.17142857142857,True,working_day,0.0,0.0,dry
+BLR6975,2026-03-30,20,61.5,Monday,2026-03,False,False,pre_monsoon,55.6,False,working_day,0.0,0.1,other
+BLR6975,2026-03-31,23,66.0,Tuesday,2026-03,True,False,pre_monsoon,49.17142857142857,True,holiday_or_weekend,0.0,0.0,dry
 BLR6975,2026-04-01,20,42.0,Wednesday,2026-04,False,False,pre_monsoon,38.4,False,working_day,0.0,0.0,dry
 BLR6975,2026-04-02,21,66.5,Thursday,2026-04,False,False,pre_monsoon,55.228571428571435,False,working_day,0.0,0.0,dry
 BLR6975,2026-04-03,20,79.5,Friday,2026-04,True,False,pre_monsoon,59.785714285714285,False,holiday_or_weekend,0.0,0.0,dry
@@ -1541,8 +1541,8 @@ BLR6983,2026-03-26,22,56.5,Thursday,2026-03,False,False,pre_monsoon,48.0,False,w
 BLR6983,2026-03-27,20,61.5,Friday,2026-03,False,False,pre_monsoon,52.75714285714286,False,working_day,0.0,0.0,dry
 BLR6983,2026-03-28,21,70.5,Saturday,2026-03,True,False,pre_monsoon,62.44285714285714,False,holiday_or_weekend,0.0,0.0,dry
 BLR6983,2026-03-29,22,78.5,Sunday,2026-03,True,False,pre_monsoon,61.82857142857143,False,holiday_or_weekend,0.39999999999999997,0.4,other
-BLR6983,2026-03-30,21,65.5,Monday,2026-03,True,False,pre_monsoon,59.24285714285714,False,holiday_or_weekend,0.0,0.1,other
-BLR6983,2026-03-31,23,76.0,Tuesday,2026-03,False,False,pre_monsoon,52.857142857142854,True,working_day,0.0,0.0,dry
+BLR6983,2026-03-30,21,65.5,Monday,2026-03,False,False,pre_monsoon,59.24285714285714,False,working_day,0.0,0.1,other
+BLR6983,2026-03-31,23,76.0,Tuesday,2026-03,True,False,pre_monsoon,52.857142857142854,True,holiday_or_weekend,0.0,0.0,dry
 BLR6983,2026-04-01,20,50.5,Wednesday,2026-04,False,False,pre_monsoon,42.42857142857143,False,working_day,0.0,0.0,dry
 BLR6983,2026-04-02,22,62.3,Thursday,2026-04,False,False,pre_monsoon,51.58571428571429,False,working_day,0.0,0.0,dry
 BLR6983,2026-04-03,22,73.0,Friday,2026-04,True,False,pre_monsoon,60.471428571428575,False,holiday_or_weekend,0.0,0.0,dry
@@ -1873,8 +1873,8 @@ BLR6984,2026-03-24,21,59.5,Tuesday,2026-03,False,False,pre_monsoon,49.8000000000
 BLR6984,2026-03-25,23,59.7,Wednesday,2026-03,False,False,pre_monsoon,52.15714285714286,True,working_day,0.0,0.0,dry
 BLR6984,2026-03-26,20,50.5,Thursday,2026-03,False,False,pre_monsoon,44.44285714285714,False,working_day,0.0,0.0,dry
 BLR6984,2026-03-27,20,49.0,Friday,2026-03,False,False,pre_monsoon,42.4,False,working_day,0.0,0.0,dry
-BLR6984,2026-03-30,20,62.0,Monday,2026-03,True,False,pre_monsoon,52.5,False,holiday_or_weekend,0.0,0.1,other
-BLR6984,2026-03-31,23,71.0,Tuesday,2026-03,False,False,pre_monsoon,53.357142857142854,True,working_day,0.0,0.0,dry
+BLR6984,2026-03-30,20,62.0,Monday,2026-03,False,False,pre_monsoon,52.5,False,working_day,0.0,0.1,other
+BLR6984,2026-03-31,23,71.0,Tuesday,2026-03,True,False,pre_monsoon,53.357142857142854,True,holiday_or_weekend,0.0,0.0,dry
 BLR6984,2026-04-01,20,38.0,Wednesday,2026-04,False,False,pre_monsoon,36.142857142857146,False,working_day,0.0,0.0,dry
 BLR6984,2026-04-02,21,90.5,Thursday,2026-04,False,False,pre_monsoon,59.01428571428572,False,working_day,0.0,0.0,dry
 BLR6984,2026-04-03,22,77.7,Friday,2026-04,True,False,pre_monsoon,59.699999999999996,False,holiday_or_weekend,0.0,0.0,dry

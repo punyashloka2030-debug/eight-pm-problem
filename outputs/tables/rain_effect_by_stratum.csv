@@ -12,8 +12,8 @@ month,day_type,evening_type,n,mean_peak_hour,mean_peak_height
 2026-01,working_day,dry,83,20.59,52.83
 2026-02,holiday_or_weekend,dry,38,20.74,57.56
 2026-02,working_day,dry,95,20.45,48.99
-2026-03,holiday_or_weekend,dry,45,20.02,66.19
-2026-03,working_day,dry,98,20.84,62.22
+2026-03,holiday_or_weekend,dry,52,20.31,65.13
+2026-03,working_day,dry,91,20.74,62.52
 2026-03,working_day,rainy,5,20.0,74.3
 2026-04,holiday_or_weekend,dry,45,19.93,61.78
 2026-04,working_day,dry,72,20.24,64.93

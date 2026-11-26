@@ -114,11 +114,16 @@ REGISTER = [
      "url": "https://archive-api.open-meteo.com/v1/archive",
      "method": "API (JSON), script 03, timezone=GMT, cached", "terms_url": "https://open-meteo.com/en/terms",
      "note": "CC BY 4.0; free non-commercial use under 10,000 calls/day. One city-centre point."},
-    {"source": "calendar", "name": "Karnataka general holidays 2025 (Notification-I) + central list 2026",
+    {"source": "calendar",
+     "name": "Karnataka general holidays 2025 (DPAR 16 HHL 2024) and 2026 (DPAR 16 HHL 2025) + central list 2026",
      "url": "https://cag.gov.in/uploads/media/Karnataka-State-Holidays-2025-067764409e26023-56493682.pdf ; "
+            "https://kea.co.in/wp-content/uploads/2025/11/Circular-No-089-2025-KARNATAKA-GOVERNMENT-HOLIDAYS-FOR-THE-YEAR-2026.pdf ; "
             "https://cag.gov.in/uploads/media/Holiday-List-2026-069521fe6f358d0-89936988.pdf",
-     "method": "Typed in by hand (04_build_calendar.py), human check M6", "terms_url": "Government publication",
-     "note": "2026 Karnataka state list only found on secondary sites; 14 dates flagged for checking."},
+     "method": "Typed in by hand (04_build_calendar.py), checked date by date in M6 -> calendar_verified.csv",
+     "terms_url": "Government publication",
+     "note": ("2026 state notification read from the copy enclosed in KEA Circular 089/2025. M6 check: 2 dates "
+              "corrected (Mahavir Jayanti 31 Mar, Valmiki Jayanti 25 Oct 2026); school breaks from news reports "
+              "of the DSEL academic calendars.")},
     {"source": "trends", "name": "Google Trends (Karnataka): bangalore traffic / bangalore rain / AQI bangalore",
      "url": "https://trends.google.com/trends/explore", "method": "Manual CSV export (M7); no scraping",
      "terms_url": "https://policies.google.com/terms",
@@ -144,6 +149,9 @@ def source_register():
 # V profile
 # ---------------------------------------------------------------------------
 def v_profile():
+    # Use the human-checked calendar once it exists (M6), else the draft.
+    cal_path = MANUAL / "calendar_verified.csv"
+    calendar = pd.read_csv(cal_path if cal_path.exists() else MANUAL / "calendar_draft.csv")
     stations = pd.read_csv(INTERIM / "stations.csv")
     flat = pd.read_csv(INTERIM / "openaq_locations_flat.csv")
     access = pd.read_csv(SOURCE_LOG) if SOURCE_LOG.exists() else None
@@ -172,8 +180,8 @@ def v_profile():
         {"source": "Open-Meteo weather", "rows": weather_rows, "raw_mb": folder_mb(RAW / "openmeteo"),
          "clean_mb": folder_mb(CLEAN / "weather_hourly.parquet"), "format": "JSON (parallel arrays) -> parquet",
          "velocity": "1 row/hour for the city; archive published with a delay of a few days"},
-        {"source": "Calendar", "rows": len(pd.read_csv(MANUAL / "calendar_draft.csv")), "raw_mb": 0,
-         "clean_mb": folder_mb(MANUAL / "calendar_draft.csv"), "format": "CSV built by hand",
+        {"source": "Calendar", "rows": len(calendar), "raw_mb": 0,
+         "clean_mb": folder_mb(cal_path if cal_path.exists() else MANUAL / "calendar_draft.csv"), "format": "CSV built by hand",
          "velocity": "1 row/day; fixed once a year by government notification"},
         {"source": "Full analysis grid (readings_clean)",
          "rows": len(pd.read_parquet(CLEAN / "readings_clean.parquet", columns=["value"])),

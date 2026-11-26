@@ -146,9 +146,9 @@ ORDER BY c.season, c.is_holiday, w.is_rain_hour
 | post_monsoon |            0 |              1 |                23.1 |               583 |
 | post_monsoon |            1 |              0 |                41.1 |              1625 |
 | post_monsoon |            1 |              1 |                26.8 |               276 |
-| pre_monsoon  |            0 |              0 |                43.7 |              2121 |
+| pre_monsoon  |            0 |              0 |                43.9 |              2115 |
 | pre_monsoon  |            0 |              1 |                30   |               142 |
-| pre_monsoon  |            1 |              0 |                43.8 |              1260 |
+| pre_monsoon  |            1 |              0 |                43.6 |              1266 |
 | pre_monsoon  |            1 |              1 |                28.4 |                79 |
 | sw_monsoon   |            0 |              0 |                22   |              2225 |
 | sw_monsoon   |            0 |              1 |                18.3 |               973 |
@@ -179,18 +179,18 @@ ORDER BY r.value_raw DESC
 LIMIT 10
 ```
 
-| date       | holiday_name                               | name                                   |   hour_ist |   pm25 | qc_flag             |
-|:-----------|:-------------------------------------------|:---------------------------------------|-----------:|-------:|:--------------------|
-| 2026-11-08 | Naraka Chaturdashi / Deepavali             | Silk Board, Bengaluru - KSPCB          |         21 |    355 | real_event_festival |
-| 2026-11-08 | Naraka Chaturdashi / Deepavali             | Silk Board, Bengaluru - KSPCB          |         22 |    304 | real_event_festival |
-| 2026-11-08 | Naraka Chaturdashi / Deepavali             | Silk Board, Bengaluru - KSPCB          |         23 |    302 | real_event_festival |
-| 2026-11-08 | Naraka Chaturdashi / Deepavali             | Silk Board, Bengaluru - KSPCB          |         20 |    285 | real_event_festival |
-| 2026-11-08 | Naraka Chaturdashi / Deepavali             | Jayanagar 5th Block, Bengaluru - KSPCB |         20 |    251 | real_event_festival |
-| 2026-11-09 | Deepavali (Lakshmi Pooja / Govardhan Puja) | Jayanagar 5th Block, Bengaluru - KSPCB |         20 |    250 | real_event_festival |
-| 2026-11-09 | Deepavali (Lakshmi Pooja / Govardhan Puja) | Jayanagar 5th Block, Bengaluru - KSPCB |         19 |    244 | real_event_festival |
-| 2026-11-09 | Deepavali (Lakshmi Pooja / Govardhan Puja) | Hebbal, Bengaluru - KSPCB              |         21 |    226 | real_event_festival |
-| 2025-10-21 | Deepavali (Lakshmi Pooja / Amavasya)       | Jayanagar 5th Block, Bengaluru - KSPCB |         21 |    221 | real_event_festival |
-| 2026-11-10 | Balipadyami, Deepavali                     | Jayanagar 5th Block, Bengaluru - KSPCB |         22 |    216 | real_event_festival |
+| date       | holiday_name                         | name                                   |   hour_ist |   pm25 | qc_flag             |
+|:-----------|:-------------------------------------|:---------------------------------------|-----------:|-------:|:--------------------|
+| 2026-11-08 | Naraka Chaturdashi / Deepavali       | Silk Board, Bengaluru - KSPCB          |         21 |    355 | real_event_festival |
+| 2026-11-08 | Naraka Chaturdashi / Deepavali       | Silk Board, Bengaluru - KSPCB          |         22 |    304 | real_event_festival |
+| 2026-11-08 | Naraka Chaturdashi / Deepavali       | Silk Board, Bengaluru - KSPCB          |         23 |    302 | real_event_festival |
+| 2026-11-08 | Naraka Chaturdashi / Deepavali       | Silk Board, Bengaluru - KSPCB          |         20 |    285 | real_event_festival |
+| 2026-11-08 | Naraka Chaturdashi / Deepavali       | Jayanagar 5th Block, Bengaluru - KSPCB |         20 |    251 | real_event_festival |
+| 2026-11-09 | Govardhan Puja (Deepavali)           | Jayanagar 5th Block, Bengaluru - KSPCB |         20 |    250 | real_event_festival |
+| 2026-11-09 | Govardhan Puja (Deepavali)           | Jayanagar 5th Block, Bengaluru - KSPCB |         19 |    244 | real_event_festival |
+| 2026-11-09 | Govardhan Puja (Deepavali)           | Hebbal, Bengaluru - KSPCB              |         21 |    226 | real_event_festival |
+| 2025-10-21 | Deepavali (Lakshmi Pooja / Amavasya) | Jayanagar 5th Block, Bengaluru - KSPCB |         21 |    221 | real_event_festival |
+| 2026-11-10 | Balipadyami, Deepavali               | Jayanagar 5th Block, Bengaluru - KSPCB |         22 |    216 | real_event_festival |
 
 ## Q7: When does the evening peak happen? (window function, MySQL 8)
 
