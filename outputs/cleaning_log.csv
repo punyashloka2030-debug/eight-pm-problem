@@ -1,0 +1,4 @@
+id,stage,problem_found,rows_affected,action_taken,why
+1,01_find_stations,"Locations in the Bengaluru box are a mix of reference monitors, low-cost sensors and locations without PM2.5",11,Kept only fixed reference monitors with a PM2.5 sensor,Low-cost and mobile sensors measure differently; mixing them compares unlike things
+2,01_find_stations,Stations list several PM2.5 sensor ids; old ids have no data in our range (OpenAQ re-issued sensor ids),11,Treat all ids of one location as one station; per day take the id that reported,"Otherwise one station would look like two, one of them empty"
+3,01_find_stations,Monitors below 60% PM2.5 coverage for the study range,7,Dropped; kept 7 stations with coverage >= 60%,"Too few complete evenings to time the evening peak; 70% left only 5 stations, so the team chose 60% (M5)"
