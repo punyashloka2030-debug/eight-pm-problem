@@ -4,7 +4,7 @@
 
 **Decision it serves:** when the city should issue evening pollution alerts, and whether rain-day rules (delivery riders, staggered office hours) need different timing.
 
-**Repository:** [[TODO-HUMAN: paste GitHub URL after M4]]
+**Repository:** https://github.com/punyashloka2030-debug/eight-pm-problem
 
 > Status: **Phase 1 (Frame)**. This README grows each phase. Manual steps are tracked in [MANUAL_STEPS.md](MANUAL_STEPS.md).
 
