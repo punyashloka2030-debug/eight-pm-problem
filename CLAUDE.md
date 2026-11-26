@@ -56,25 +56,21 @@ QA_PREP) governs how to work. Its key rules:
 - Worst months Nov 26, Mar 26, Apr 26; cleanest Jun-Aug 26. Deepavali 2025 night +136% vs matched days.
 - Weekday ranking: re-run 10_analysis.py after update_11 and check `weekday_check`.
 
-## Where things stand
+## Where things stand (updated 2026-11-26, end of the laptop session)
 
-Run order: `make all` (see Makefile) = 01..12 scripts. Phase 1-3 code is done. MANUAL_STEPS.md has status.
+Run order: `make all` (01..12, 14, 15), then `make zip` (16). `13_compare_spreadsheet.py` is run by hand.
 
-Done manual steps: M1, M2, M3, M5, M10 (168/168 cells MATCH; screenshots in report/img/), M11.
-Pending MANUAL steps: M4 (add teammates), M6 (verify calendar -> calendar_verified.csv, then re-run
-07 onwards), M7 (Google Trends CSVs), M9 (one commit per teammate), M12 (contribution split),
-M13 (rehearse), M14 (submit).
+Done: every AUTO item. Report builder (14: report.md/.docx/.pdf, body ends on page 10), slides (15:
+report/slides.pptx + speaker_script.md), QA_PREP.md, README rerun guide, CONTRIBUTIONS.md template,
+zip builder (16), SUBMISSION_CHECK.md (rubric table). Manual steps done: M1-M3, M5-M8, M10, M11.
+M6 corrected 2 calendar dates (Mahavir Jayanti 31 Mar, Valmiki Jayanti 25 Oct 2026); M7 Trends exported.
 
-Pending AUTO work, in order:
-1. Look at every chart in outputs/charts/ (render check: label collisions, titles).
-   Weekday result: NO weekday stands out once festivals are excluded (gap 2.4 µg/m³, permutation p = 0.992).
-2. M10 is done (src/13_compare_spreadsheet.py, report/spreadsheet_vs_pandas.md).
-3. Google Trends loader exists (src/05b_load_trends.py + chart_trends in 11); it skips until M7 files exist.
-4. Report: plan was src/14_build_report.py that fills every number from outputs/tables/*.json/*.csv, draws a
-   pipeline diagram, and writes `report/report.md` in the brief's exact order (a-i), <= 10 pages + appendices, written for a
-   non-technical commissioner, numbers only from pipeline files; render to .docx/.pdf (pandoc; PDF may
-   need LibreOffice: `soffice --headless --convert-to pdf`). Use report/reflection_notes.md for section i.
-5. Slides `report/slides.md` (<= 10, finding titles, speaker notes) -> .pptx; speaker script with timings.
-6. QA_PREP.md (per script: what, 3 key lines, what breaks; 25 viva Q&As), README (full rerun guide),
-   report/appendix_ai_use.md, contribution template, zip builder for TeamName_FinalSubmission.zip.
-7. Final rubric table (15 marks) with files and ✅/⚠️, open manual steps, all [[TODO-HUMAN]] markers.
+Human inputs live in data/manual/ (team.csv, team_name.txt, m10_answers.csv, calendar_verified.csv,
+trends_*.csv, outlier_verdicts.csv) and report/reflection.md, report/appendix_ai_use.md.
+
+Open MANUAL steps: M4 (add teammates), M9 (one commit per teammate), M12 (contribution %),
+M13 (rehearse), M14 (make report zip, submit).
+
+Note: the GitHub repo is PUBLIC and the report/slides contain members' names and USNs; pushes from the
+assistant are blocked for that reason, so the user pushes. Cleaning-log rows are looked up by their
+problem_found text (re-running one stage reorders the log).

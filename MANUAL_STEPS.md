@@ -13,13 +13,13 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 - [x] M5 Approve city, dates and station list (2026-11-26: Bengaluru, 2025-10-01 to 2026-11-20, 7 stations at >=60% PM2.5 coverage → data/manual/stations_approved.csv)
 - [x] M6 Verify the holiday and festival calendar draft (2026-11-26: checked against DPAR 16 HHL 2025 via KEA circular 089/2025; 2 dates corrected → data/manual/calendar_verified.csv)
 - [x] M7 Export Google Trends CSVs (2026-11-26: 4 files, 60 weekly rows each, Karnataka)
-- [ ] M8 CPCB portal downloads *(only if OpenAQ coverage is thin; details added if needed)*
-- [ ] M9 Each teammate makes one meaningful commit *(tasks assigned in Phase 2)*
+- [x] M8 CPCB portal downloads — not needed (OpenAQ gave 7 stations at >= 60% coverage)
+- [ ] M9 Each teammate makes one meaningful commit (own row in CONTRIBUTIONS.md; needs M4 first)
 - [x] M10 Build the hour-by-weekday pivot in LibreOffice Calc (2026-11-26: 168/168 cells MATCH, max diff 0.005)
 - [x] M11 Review the top 10 flagged outliers (2026-11-26: 10 verdicts → 21 hours failure, 5 hours real; data/manual/outlier_verdicts.csv)
-- [ ] M12 Fill in the team contribution split *(template added in Phase 4)*
-- [ ] M13 Read QA_PREP.md and rehearse the 7-minute talk *(script added in Phase 4)*
-- [ ] M14 Rename the final zip with the team name and submit
+- [ ] M12 Fill in the team contribution split (CONTRIBUTIONS.md)
+- [ ] M13 Read QA_PREP.md and rehearse the 7-minute talk (report/speaker_script.md)
+- [ ] M14 Rebuild the zip (`make zip`, already named SataAndDoryLetting_FinalSubmission.zip) and submit
 
 ---
 
@@ -257,13 +257,66 @@ TIME:     ~20 minutes
 ═══════════════════════════════════════════
 ```
 
+## M9 — One meaningful commit from every teammate
+
+```
+════════ MANUAL STEP M9: One commit per teammate ════════
+WHY:      Reproducibility (1.5 marks): "repo has commits from all members". Today git shows
+          commits from Punyashloka (and the assistant) only.
+DO THIS (each teammate, on their OWN laptop and GitHub account; M4 must be done first):
+  1. git clone https://github.com/punyashloka2030-debug/eight-pm-problem.git
+     cd eight-pm-problem
+  2. git config user.name "Your Name"      git config user.email "the email on your GitHub account"
+  3. Open CONTRIBUTIONS.md and fill in YOUR OWN row: role and what you did (not the %).
+  4. git add CONTRIBUTIONS.md
+     git commit -m "Contribution: <your name>"
+     git pull --rebase
+     git push
+PUT RESULT HERE: CONTRIBUTIONS.md (one row per member, each pushed by that member)
+HOW I'LL CHECK:  git shortlog -sn shows one line per team member.
+TIME:     ~10 minutes each
+═══════════════════════════════════════════
+```
+
+## M12 — Team contribution split
+
+```
+════════ MANUAL STEP M12: Contribution percentages ════════
+WHY:      Deliverable 6: "each member's role and contribution percentage".
+DO THIS:
+  1. Meet (or a group chat) after M9. Agree a percentage for each member; they must add to 100.
+  2. One person writes the agreed percentages into CONTRIBUTIONS.md and commits.
+  3. If your class showed a different format, copy that format instead.
+PUT RESULT HERE: CONTRIBUTIONS.md
+HOW I'LL CHECK:  no [[TODO-HUMAN]] left in CONTRIBUTIONS.md and the percentages sum to 100.
+TIME:     ~15 minutes
+═══════════════════════════════════════════
+```
+
+## M13 — Study QA_PREP.md and rehearse
+
+```
+════════ MANUAL STEP M13: Rehearse the talk and the Q&A ════════
+WHY:      Presentation (5 marks): storyline (2), Q&A (1.5), participation (0.5).
+DO THIS:
+  1. Every member reads all of QA_PREP.md and opens each script at the listed key lines.
+  2. Run the talk twice with a timer, using report/slides.pptx and report/speaker_script.md.
+     Target 6:30-7:00. Change who presents which slides if you like (each member presents).
+  3. Quiz each other with the 25 questions, answers covered.
+PUT RESULT HERE: nothing to save; tell me the rehearsal time.
+HOW I'LL CHECK:  you reply with the two rehearsal times.
+TIME:     ~1-2 hours
+═══════════════════════════════════════════
+```
+
 ## M14 — Rename and submit
 
 ```
 ════════ MANUAL STEP M14: Rename the final zip and submit ════════
 WHY:      Deliverables: one zipped folder named TeamName_FinalSubmission.
 DO THIS:
-  1. Rename TeamName_FinalSubmission.zip, replacing TeamName with your team's name.
+  1. After every other step, run:   make report zip
+     This writes SataAndDoryLetting_FinalSubmission.zip in the repo folder.
   2. Upload it wherever your instructor asked.
 PUT RESULT HERE: the course submission portal
 HOW I'LL CHECK:  You reply "submitted". I can't see the portal.

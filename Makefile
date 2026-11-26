@@ -48,3 +48,7 @@ charts:
 report:
 	$(PY) src/14_build_report.py
 	$(PY) src/15_build_slides.py
+
+# The submission folder: <TeamName>_FinalSubmission.zip (never includes .env or data/raw/)
+zip:
+	$(PY) src/16_make_zip.py
