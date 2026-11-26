@@ -11,7 +11,7 @@ Steps marked *(details added later)* depend on data we haven't pulled yet. Their
 - [ ] M3 Install Java 17, verify with a tiny Spark job
 - [ ] M4 Create the GitHub repo, add teammates, push (repo created and pushed 2026-11-26; teammates still to be added)
 - [x] M5 Approve city, dates and station list (2026-11-26: Bengaluru, 2025-10-01 to 2026-11-20, 7 stations at >=60% PM2.5 coverage → data/manual/stations_approved.csv)
-- [ ] M6 Verify the holiday and festival calendar draft *(details added in Phase 2)*
+- [ ] M6 Verify the holiday and festival calendar draft (14 rows flagged needs_check)
 - [ ] M7 Export Google Trends CSVs
 - [ ] M8 CPCB portal downloads *(only if OpenAQ coverage is thin; details added if needed)*
 - [ ] M9 Each teammate makes one meaningful commit *(tasks assigned in Phase 2)*
@@ -140,6 +140,37 @@ DO THIS:
 PUT RESULT HERE: data/interim/stations_proposed.csv (I'll copy the approved list to data/manual/stations_approved.csv)
 HOW I'LL CHECK:  6–10 approved stations, written to stations_approved.csv. (Rule changed to ≥60% at M5: only 5 passed 70%.)
 TIME:     ~10 minutes (team discussion)
+═══════════════════════════════════════════
+```
+
+## M6 — Verify the holiday and festival calendar draft
+
+```
+════════ MANUAL STEP M6: Verify the calendar draft ════════
+WHY:      Data sources (2 marks): "a holiday and festival calendar you build"; it feeds every
+          holiday/festival comparison, so a wrong date would quietly bias results.
+DO THIS:
+  1. Open data/manual/calendar_draft.csv in LibreOffice Calc (or Google Sheets).
+  2. Filter the column needs_check = yes (14 rows). For each one, read the note column and
+     check the date against an official source:
+       2025: Karnataka Notification-I (DPAR 16 HHL 2024), copy hosted by CAG:
+             https://cag.gov.in/uploads/media/Karnataka-State-Holidays-2025-067764409e26023-56493682.pdf
+       2026: Central Govt offices in Karnataka, 2026 list (CAG):
+             https://cag.gov.in/uploads/media/Holiday-List-2026-069521fe6f358d0-89936988.pdf
+             For the Karnataka STATE 2026 list, search the web for
+             "DPAR 2026 general holidays notification Karnataka pdf" and use a
+             government (.gov.in / .kar.nic.in) copy, not a news or HR website.
+       Moon-dependent Islamic holidays: use the date the government actually declared.
+  3. Fix any wrong date or name directly in the file. In needs_check write "checked"
+     and add your source to the note.
+  4. Fill the school_break column with "yes" for Karnataka state-school vacation days
+     (Dasara break 2025, summer vacation 2026, Dasara break 2026) from the Karnataka
+     School Education Department academic calendar. Write the source in note.
+  5. Save as CSV with a NEW name:  data/manual/calendar_verified.csv
+PUT RESULT HERE: data/manual/calendar_verified.csv
+HOW I'LL CHECK:  416 rows, the same columns, no needs_check = "yes" left, dates parse,
+                 and a diff against the draft listing exactly what you changed.
+TIME:     ~30–40 minutes
 ═══════════════════════════════════════════
 ```
 
