@@ -13,7 +13,8 @@
 ```bash
 # 1. Python environment
 python -m venv .venv
-source .venv/bin/activate          # Windows: use WSL2 (see M3)
+source .venv/bin/activate          # fish shell: source .venv/bin/activate.fish
+                                   # Windows: use WSL2 (see M3)
 pip install -r requirements.txt
 
 # 2. Secrets
